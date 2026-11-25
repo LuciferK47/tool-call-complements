@@ -134,7 +134,8 @@ class ArithEnv:
         for i in range(n):
             bins = [rng.choices([b for b, _ in _BW], [w for _, w in _BW])[0] for _ in range(K)]
             dl, _, _ = _BINS[bins[0]]
-            first = rng.randint(10 ** (rng.randint(*dl) - 1), 10 ** rng.randint(*dl) - 1)
+            d0 = rng.randint(*dl)
+            first = rng.randint(10 ** (d0 - 1), 10 ** d0 - 1)
             ops, rights, vals, cur = [], [], [], first
             for b in bins:
                 _, dr, allowed = _BINS[b]

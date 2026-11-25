@@ -1,0 +1,52 @@
+{
+ "source": "Iteration-1 pre-registered run, Qwen2.5-0.5B, partition 0 (n_test=350)",
+ "contrasts": {
+  "mup_vs_pp_step_direct": {
+   "diff": -3.8485714285714274,
+   "ci_lo": -5.962857142857143,
+   "ci_hi": -1.7399285714285717,
+   "p": 0.0001,
+   "n": 350,
+   "excludes_zero": true,
+   "p_holm": 0.00030000000000000003
+  },
+  "mup_vs_best_global_pattern": {
+   "diff": -6.28285714285714,
+   "ci_lo": -8.605714285714285,
+   "ci_hi": -3.9571428571428573,
+   "p": 0.0001,
+   "n": 350,
+   "excludes_zero": true,
+   "p_holm": 0.00030000000000000003
+  },
+  "mup_vs_pp_first": {
+   "diff": -5.448571428571428,
+   "ci_lo": -7.777214285714286,
+   "ci_hi": -3.145642857142859,
+   "p": 0.0001,
+   "n": 350,
+   "excludes_zero": true,
+   "p_holm": 0.00030000000000000003
+  }
+ },
+ "gate": {
+  "headroom_rollout_minus_global": {
+   "diff": 24.45,
+   "ci_lo": 19.2,
+   "ci_hi": 29.7,
+   "p": 0.0001,
+   "n": 100,
+   "excludes_zero": true,
+   "threshold_points": 2.0,
+   "passed": true
+  },
+  "hindsight_minus_global": {
+   "diff": 29.11,
+   "ci_lo": 25.32,
+   "ci_hi": 32.91,
+   "p": 0.0001,
+   "n": 100,
+   "excludes_zero": true
+  }
+ }
+}
