@@ -9,3 +9,5 @@ venv/
 logs/
 *.log
 data/musique_ans_v1.0_dev.jsonl
+out/
+bundle_*.tar.gz
