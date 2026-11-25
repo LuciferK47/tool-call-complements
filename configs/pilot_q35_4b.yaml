@@ -1,0 +1,17 @@
+# L40S package, frozen before any run (pre-registration addendum 2, docs/preregistration.md). Do not edit.
+# Setup check on the separate pilot seed; cannot change any setting.
+name: pilot_q35_4b
+model:
+  id: Qwen/Qwen3.5-4B
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+  device: auto
+  dtype: bfloat16
+  threads: 8
+expect: {num_layers: 32, hidden_size: 2560}
+layers: [16, 21, 24, 29, 32]
+max_new_tokens: 24
+batch_size: 32
+pool: {n: 60, seed: 777001, prefix: pilot}
+lambdas: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+bootstrap: {n_resamples: 10000, seed: 0}
+answer_parser: strict

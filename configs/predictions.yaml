@@ -1,0 +1,28 @@
+# Pre-specified predictions for the scaling study (committed and pushed before any of the runs listed under `new_runs` was analysed).
+#
+# What was already seen when this file was written (so these are NOT blind predictions about it):
+#   * Qwen2.5-0.5B and Qwen3.5-0.8B (seed 20261101): all horizon results (m = 1,2,4,8; signals S0, S1, S4, S0+S4).
+#   * T = 3 outcome trees of all runs, including pair counts (complement : substitute = 1020:71, 685:64, 394:174, 62:46, 26:23).
+# Not yet analysed with composite horizons: Qwen3.5-2B, 4B, 9B, Qwen3.5-0.8B fresh seed 20261120, Qwen3.5-0.8B incremental,
+# and every run listed under `gpu_runs` (arith6, musique).
+#
+# Definitions. A composite joins m independent tasks (T = 3m steps for arithmetic). p_j = mean unaided step accuracy on the
+# all-called prefix; x(T) = sum_{j<T}(1 - p_j) = expected number of errors if no step is called. Regret of a rule at a setting =
+# U-AUC(best deployable rule) - U-AUC(rule), in points, U-AUC over lambda in {0.1..0.6} with per-call price lambda/m.
+# "Per-step rules" = local (1-p > c), optimistic, pessimistic. "Label-free rules" = Belief-DP, all-or-nothing, per-step rules.
+# "Retuned" = confidence threshold re-tuned with labelled composites at each (T, lambda).
+new_runs: [q35_2b, q35_4b, q35_9b, q35_0p8b_seed20261120, q35_0p8b_incremental]
+horizons_m: [1, 2, 4, 8, 16, 32]
+signals_without_gpu_export: [S0]
+predictions:
+  P1: "Over all (run, signal, m) cells, the best per-step rule's regret is rank-correlated with x(T) (Spearman >= 0.7)."
+  P2: "Cells with x(T) < 0.3: the best per-step rule has regret <= 3 points."
+  P3: "Cells with x(T) > 1.5: the best per-step rule has regret >= 8 points."
+  P4: "The closed-form homogeneous prediction (from mean p only, no fitting) of the optimistic and pessimistic rules' U-AUC regret has Pearson correlation >= 0.8 with the measured per-step-rule regret."
+  P5: "Belief-DP regret against the best label-free rule is <= 1.0 point in at least 90% of cells and never exceeds 3.0."
+  P6: "Complement:substitute pair counts decline with model size within the Qwen3.5 family (2B > 4B > 9B ratio)."
+  P7: "Qwen3.5-0.8B fresh-seed (new instances, same model): Belief-DP regret against the best label-free rule <= 3.0 at every m."
+failures_are_reported: true
+gpu_runs:
+  arith6: "one genuine 6-step dependent chain; no prediction beyond P1-P5 applied to it"
+  musique: "2-4 hop real questions with BM25 retrieval as a noisy tool; exploratory, no numeric prediction"

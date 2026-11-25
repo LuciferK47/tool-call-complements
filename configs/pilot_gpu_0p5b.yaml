@@ -1,0 +1,17 @@
+# L40S package, frozen before any run (pre-registration addendum 2, docs/preregistration.md). Do not edit.
+# Setup check on the separate pilot seed; cannot change any setting.
+name: pilot_gpu_0p5b
+model:
+  id: Qwen/Qwen2.5-0.5B-Instruct
+  revision: 7ae557604adf67be50417f59c2c2f167def9a775
+  device: auto
+  dtype: float32
+  threads: 8
+expect: {num_layers: 24, hidden_size: 896}
+layers: [12, 16, 18, 22, 24]
+max_new_tokens: 12
+batch_size: 16
+pool: {n: 60, seed: 777001, prefix: pilot}
+lambdas: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+bootstrap: {n_resamples: 10000, seed: 0}
+answer_parser: strict

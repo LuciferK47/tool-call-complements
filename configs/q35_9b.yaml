@@ -1,0 +1,24 @@
+# L40S package, frozen before any run (pre-registration addendum 2, docs/preregistration.md). Do not edit.
+name: q35_9b
+model:
+  id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  device: auto
+  dtype: bfloat16
+  threads: 8
+expect: {num_layers: 32, hidden_size: 4096}
+layers: [16, 21, 24, 29, 32]
+max_new_tokens: 24
+batch_size: 16
+pool: {n: 1000, seed: 20261101, prefix: e1}
+expected_dataset_hash: 6517fd246393057f
+splits: {train: 450, cal: 100, gate: 100, test: 350}
+partition_seeds: [20261111, 20261112, 20261113]
+lambdas: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+reference_lambda: 0.3
+gate: {threshold_points: 2.0}
+bootstrap: {n_resamples: 10000, seed: 0, ci_level: 0.95}
+answer_parser: strict
+extra_policies: [mup_pc, pp_plan]
+extra_pool: {n: 4000, seed: 20261201, prefix: x1, chunk: 1000}
+ablation_sizes: [450, 1000, 2000, 4450]

@@ -1,0 +1,19 @@
+# PRIMARY CONFIG - frozen after the dev pilot (results/pilot/pilot.json) and BEFORE the main pool was built or inspected.
+# Any change after this point must be logged as a deviation in docs/01 with the reason.
+name: primary
+model:
+  id: Qwen/Qwen2.5-0.5B-Instruct
+  revision: 7ae557604adf67be50417f59c2c2f167def9a775
+  device: auto          # cuda if available, else cpu (the same file runs on the team's RTX 4050 machine)
+  dtype: float32
+  threads: 8
+layers: [12, 16, 18, 22, 24]
+max_new_tokens: 12
+batch_size: 16
+pool: {n: 1000, seed: 20261101, prefix: e1}
+splits: {train: 450, cal: 100, gate: 100, test: 350}
+partition_seeds: [20261111, 20261112, 20261113]     # first = primary analysis; others = split-sensitivity checks
+lambdas: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+reference_lambda: 0.3
+gate: {threshold_points: 2.0}
+bootstrap: {n_resamples: 10000, seed: 0, ci_level: 0.95}
