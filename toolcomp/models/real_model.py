@@ -111,7 +111,7 @@ class HFRunner:
             gen = self.model.generate(
                 **enc, max_new_tokens=max_new_tokens, do_sample=False, temperature=None, top_p=None, top_k=None,
                 pad_token_id=self.tok.pad_token_id, return_dict_in_generate=True, output_scores=True,
-                output_hidden_states=True)
+                output_hidden_states=bool(layers))
             seq = gen.sequences[:, enc["input_ids"].shape[1]:]
             # Memory-efficient step-wise log-softmax (avoids allocating full (B, n_new, V) buffer at once)
             tok_logp_cols = []
@@ -122,7 +122,7 @@ class HFRunner:
                 if t_idx == 0:
                     ent0 = -(step_lp.exp() * step_lp).sum(-1)
             tok_logp = torch.cat(tok_logp_cols, dim=1) if tok_logp_cols else torch.zeros((seq.shape[0], 0), device=self.device)
-            prompt_hs = gen.hidden_states[0]                             # tuple(len=L+1) of (B, S, H)
+            prompt_hs = gen.hidden_states[0] if layers else None        # tuple(len=L+1) of (B, S, H); layers=[] skips hidden states
             for b in range(seq.shape[0]):
                 ids = seq[b].tolist()
                 n = len(ids)
@@ -132,12 +132,12 @@ class HFRunner:
                         break
                 text = self.tok.decode(ids[:n], skip_special_tokens=True).strip()
                 mlp = float(tok_logp[b, :max(n, 1)].mean().item())
-                hid = {l: prompt_hs[l][b, -1, :].float().cpu().numpy().astype(np.float16) for l in layers}
+                hid = {l: prompt_hs[l][b, -1, :].float().cpu().numpy().astype(np.float16) for l in layers} if layers else {}
                 # Cache token 1 and 2 early signals (S3)
                 gt_logp = [float(tok_logp[b, step_idx].item()) for step_idx in range(min(2, n))]
                 gt_hid = {l: [gen.hidden_states[1 + step_idx][l][b, -1, :].float().cpu().numpy().astype(np.float16)
                               for step_idx in range(min(2, n, len(gen.hidden_states) - 1))]
-                           for l in layers}
+                           for l in layers} if layers else {}
                 outs.append(NodeOutput(text=text, n_tokens=n, mean_logprob=mlp,
                                        first_token_entropy=float(ent0[b].item()), hidden=hid,
                                        n_prompt_tokens=int(enc['attention_mask'][b].sum().item()),

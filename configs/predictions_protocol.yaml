@@ -1,0 +1,18 @@
+# How the predictions in predictions.yaml are scored. Written after the five text-rebuilt runs were computed but BEFORE any regret, correlation or
+# per-cell result was looked at (only the per-level step accuracies were printed). Scoring code: scripts/check_predictions.py.
+cells: "one cell = (run, signal, m); runs are those in new_runs plus every run in gpu_runs that returns; signal S0 for all, S1/S4/S0+S4 where available"
+utility: "mean over the three re-partitions of the test-split U-AUC (points), exactly as in the horizon study"
+per_step_rules: [local, optimistic, pessimistic]
+label_free_rules: [never, always, all_or_nothing, local, optimistic, pessimistic, belief_dp]
+best_per_step_regret: "max over all nine deployable rules minus max over per_step_rules"
+belief_dp_regret_vs_label_free: "max over label_free_rules minus belief_dp (negative = Belief-DP is best)"
+x: "x(T) = m * sum_j (1 - p_j), p_j = unaided step accuracy given a correct prefix (scaling.step_accuracy); for MuSiQue the prefix is the one actually produced"
+holds_if:
+  P1: "Spearman(x, best_per_step_regret) >= 0.7 over all cells"
+  P2: "in at least 90% of cells with x < 0.3, best_per_step_regret <= 3 (fraction and maximum reported)"
+  P3: "in at least 90% of cells with x > 1.5, best_per_step_regret >= 8 (fraction and median reported)"
+  P4: "Pearson(predicted, measured best_per_step_regret) >= 0.8 over all cells; predicted = min over per-step rules of scaling-free homogeneous prediction (horizon.predicted_regret)"
+  P5: "belief_dp_regret_vs_label_free <= 1.0 in at least 90% of cells and <= 3.0 in all of them"
+  P6: "complement:substitute ratio ordered 2B > 4B > 9B"
+  P7: "fresh-seed 0.8B: belief_dp_regret_vs_label_free <= 3.0 at every m"
+report_all: "every prediction is reported as held / not held with the numbers, including those that fail"

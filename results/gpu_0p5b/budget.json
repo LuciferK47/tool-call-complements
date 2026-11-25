@@ -1,0 +1,35 @@
+[
+  {
+    "stage": "tree",
+    "run": "gpu_0p5b",
+    "n_instances": 5,
+    "wall_seconds": 42.18147897103336,
+    "gpu_seconds": 0.0,
+    "peak_gpu_mem_gb": null,
+    "nodes_generated": 35,
+    "nodes_reused": 0,
+    "timestamp": "2026-11-25T16:05:02"
+  },
+  {
+    "stage": "tree",
+    "run": "gpu_0p5b",
+    "n_instances": 5,
+    "wall_seconds": 41.078274436993524,
+    "gpu_seconds": 0.0,
+    "peak_gpu_mem_gb": null,
+    "nodes_generated": 35,
+    "nodes_reused": 0,
+    "timestamp": "2026-11-25T16:06:24"
+  },
+  {
+    "stage": "tree",
+    "run": "gpu_0p5b",
+    "n_instances": 5,
+    "wall_seconds": 0.07537603192031384,
+    "gpu_seconds": 0.0,
+    "peak_gpu_mem_gb": null,
+    "nodes_generated": 0,
+    "nodes_reused": 0,
+    "timestamp": "2026-11-25T16:07:03"
+  }
+]

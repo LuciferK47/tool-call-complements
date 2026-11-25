@@ -105,3 +105,47 @@ def test_bracket_and_abandonment():
             for b in (c, 0.5 * c):
                 for p in (0.01, 0.5):
                     assert not f(j, np.array([b]), np.array([p]), None)[0]
+
+
+# ---------------------------------------------------------------- noisy tool and scaling-limit statements used in the paper
+def _v_noisy(p, q, S, c):
+    return float(np.prod([q[i] if i in S else p[i] for i in range(len(p))]) - c * len(S))
+
+
+def test_noisy_tool_second_difference():
+    """Tool accuracy q >= p: second difference of V is R (q_i - p_i)(q_j - p_j) >= 0, R = product over the other steps of q (called) or p (not called)."""
+    rng = np.random.default_rng(3)
+    for _ in range(60):
+        p = rng.uniform(0.05, 0.9, 6)
+        q = np.minimum(1.0, p + rng.uniform(0, 0.5, 6))
+        S = set(int(k) for k in rng.choice(6, 2, replace=False))
+        i, j = [k for k in range(6) if k not in S][:2]
+        d = _v_noisy(p, q, S | {i, j}, .1) - _v_noisy(p, q, S | {i}, .1) - _v_noisy(p, q, S | {j}, .1) + _v_noisy(p, q, S, .1)
+        R = np.prod([q[k] if k in S else p[k] for k in range(6) if k not in {i, j}])
+        assert abs(d - R * (q[i] - p[i]) * (q[j] - p[j])) < 1e-12 and d >= -1e-12
+
+
+def test_noisy_homogeneous_threshold():
+    from toolcomp.horizon import best_set
+    for p, q in ((0.6, 0.9), (0.8, 0.95)):
+        for T in (3, 6):
+            cstar = (q ** T - p ** T) / T
+            for c in (0.7 * cstar, 1.3 * cstar):
+                v = [(q ** k) * (p ** (T - k)) - c * k for k in range(T + 1)]
+                assert int(np.argmax(v)) == (T if c < cstar else 0)
+
+
+def test_scaling_limit_of_per_step_regret():
+    """With x = T(1-p) and total price C = Tc fixed, sup regret of the optimistic / pessimistic rule -> x-1+e^-x and 1-(1+x)e^-x."""
+    from toolcomp.horizon import rule_expected_utility
+    for x in (0.2, 0.5, 1.0, 2.0):
+        T = 4000
+        p = 1 - x / T
+        best_o = best_p = 0.0
+        for C in np.linspace(0.01, 3.0, 600):
+            c = C / T
+            opt = rule_expected_utility("optimal_open_loop", [p], T, c)
+            best_o = max(best_o, opt - rule_expected_utility("optimistic", [p], T, c))
+            best_p = max(best_p, opt - rule_expected_utility("pessimistic", [p], T, c))
+        assert abs(best_o - (x - 1 + np.exp(-x))) < 0.01, (x, best_o)
+        assert abs(best_p - (1 - (1 + x) * np.exp(-x))) < 0.01, (x, best_p)
