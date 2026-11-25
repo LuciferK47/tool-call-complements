@@ -119,6 +119,19 @@ def main():
     L.append("\\bottomrule\\end{tabular}")
     (out / "gen_runs.tex").write_text("\n".join(L))
 
+    # ------------------------------------------------------------ deep runs (6-step arithmetic, MuSiQue), when present
+    deep = {t: json.loads((res / "scaling" / f"{t}.json").read_text()) for t in extra if t.startswith(("arith6_", "musique_"))}
+    if deep:
+        L = ["\\begin{tabular}{@{}lrrrrrrr@{}}\\toprule", "Run & $n$ & never & all calls & $x_{m=1}$ & \\multicolumn{3}{c}{Regret, $m$=} \\\\",
+             " & & & & & 1 & 2 & 4 \\\\ \\midrule"]
+        for t, d in sorted(deep.items()):
+            cs = {c["m"]: c for c in cp.cells(d) if c["sig"] == "S0"}
+            lab = t.replace("arith6_", "6-step arith., ").replace("musique_k", "MuSiQue $K$=").replace("_q35_", ", ").replace("_gpu_0p5b", ", 0.5B")
+            lab = lab.replace("2b", "2B").replace("4b", "4B").replace("9b", "9B").replace("0p8b", "0.8B")
+            L.append(f"{lab} & {d['n']} & {100 * d['never_accuracy']:.0f} & {100 * d['all_call_accuracy']:.0f} & {cs[1]['x']:.1f} & " + " & ".join(f"{cs[m]['best_per_step_regret']:.1f}" if m in cs else "--" for m in (1, 2, 4)) + " \\\\")
+        L.append("\\bottomrule\\end{tabular}")
+        (out / "gen_deep.tex").write_text("\n".join(L))
+        macro("NDeep", str(len(deep)))
     # ------------------------------------------------------------ label efficiency summary (text + figure data)
     le = {}
     for f in sorted((res / "label_efficiency").glob("*.json")):
