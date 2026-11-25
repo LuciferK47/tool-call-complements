@@ -1,0 +1,24 @@
+# Second set of pre-specified predictions. To be committed and pushed BEFORE the quantity below is computed on any of the runs listed under `unseen`.
+#
+# Status: POST HOC with respect to the first set. It was written after the first set (predictions.yaml) had been scored on the RTX 4050 runs and
+# P1, P3 and P4 had failed there. It replaces nothing: the first set is reported as scored, including the failures.
+#
+# What was already seen when this file was written:
+#   * The signal-aware prediction (below) on six runs: arith6_gpu_0p5b, arith6_q35_0p8b, gpu_0p5b_seed20261201, q35_0p8b_seed20261201,
+#     q35_0p8b_seed20261120, q35_0p8b_incremental. There it had Pearson 0.98 and mean absolute error 0.8 points over 132 cells. These are NOT tests of it.
+#   * The measured regrets of the runs under `unseen_prediction_only` (they are in results/scaling/), but never the signal-aware prediction for them.
+#   * Belief-DP and all-or-nothing utilities of the 2B, 4B and 9B runs (surface signal) in an unrelated check.
+#
+# Signal-aware prediction of a per-step rule's regret (no fitted parameter, no test data): take the calibrated step probabilities on the training
+# split at each step position (the same quantile-thinned law Belief-DP uses), draw G = 3000 independent sequences of T of them, run every rule on
+# them with the price of the cell, and score a sequence by (product of the drawn probabilities at unaided steps) - price x calls. Predicted regret =
+# best label-free rule minus best of {local, optimistic, pessimistic}, U-AUC over lambda, mean over the three re-partitions.
+# Measured regret = as in predictions_protocol.yaml (best of all nine rules minus best per-step rule).
+unseen_prediction_only: [primary_0p5b, q35_0p8b, q35_2b, q35_4b, q35_9b]      # all stored signals, m in 1..32, committed prices
+unseen_completely: "every cell from the L40S bundle, if it returns in time (arith6, fresh pools, and S1/S4 signals for 2B, 4B, 9B)"
+predictions:
+  V1: "Pearson(signal-aware, measured) >= 0.90 over all cells of the unseen runs"
+  V2: "mean absolute error <= 2.0 points over all cells of the unseen runs"
+  V3: "the signal-aware prediction has a smaller mean absolute error than the closed form (predictions.yaml P4) on cells with signal S4 or S0+S4, and the two differ by at most 1.0 point in mean absolute error on S0 cells"
+  V4: "Pearson(signal-aware, measured) >= 0.85 on the cells below the ceiling of the price grid (0.3 < measured < 15 points)"
+failures_are_reported: true
