@@ -1,0 +1,92 @@
+{
+ "musique_k2_gpu_0p5b": {
+  "n": 200,
+  "K": 2,
+  "never": 0.015,
+  "all_call": 0.18,
+  "tool_right_given_correct_prefix": [
+   0.41,
+   0.35294117647058826
+  ],
+  "share_correct_with_wrong_hop": 0.49230769230769234,
+  "complements": 28,
+  "substitutes": 15,
+  "belief_dp_worst_shortfall_vs_never": 37.999999999999986
+ },
+ "musique_k2_q35_0p8b": {
+  "n": 200,
+  "K": 2,
+  "never": 0.015,
+  "all_call": 0.285,
+  "tool_right_given_correct_prefix": [
+   0.505,
+   0.4672897196261682
+  ],
+  "share_correct_with_wrong_hop": 0.4,
+  "complements": 41,
+  "substitutes": 6,
+  "belief_dp_worst_shortfall_vs_never": 57.205882352941174
+ },
+ "musique_k3_gpu_0p5b": {
+  "n": 150,
+  "K": 3,
+  "never": 0.006666666666666667,
+  "all_call": 0.18666666666666668,
+  "tool_right_given_correct_prefix": [
+   0.46,
+   0.32051282051282054,
+   0.4146341463414634
+  ],
+  "share_correct_with_wrong_hop": 0.8229166666666666,
+  "complements": 43,
+  "substitutes": 25,
+  "belief_dp_worst_shortfall_vs_never": 33.00000000000001
+ },
+ "musique_k3_q35_0p8b": {
+  "n": 150,
+  "K": 3,
+  "never": 0.0,
+  "all_call": 0.20666666666666667,
+  "tool_right_given_correct_prefix": [
+   0.5333333333333333,
+   0.391304347826087,
+   0.5454545454545454
+  ],
+  "share_correct_with_wrong_hop": 0.7087378640776699,
+  "complements": 53,
+  "substitutes": 33,
+  "belief_dp_worst_shortfall_vs_never": 33.00000000000001
+ },
+ "musique_k4_gpu_0p5b": {
+  "n": 80,
+  "K": 4,
+  "never": 0.025,
+  "all_call": 0.1625,
+  "tool_right_given_correct_prefix": [
+   0.4625,
+   0.2222222222222222,
+   0.5,
+   0.14285714285714285
+  ],
+  "share_correct_with_wrong_hop": 0.98989898989899,
+  "complements": 73,
+  "substitutes": 53,
+  "belief_dp_worst_shortfall_vs_never": 19.67857142857143
+ },
+ "musique_k4_q35_0p8b": {
+  "n": 80,
+  "K": 4,
+  "never": 0.0125,
+  "all_call": 0.1625,
+  "tool_right_given_correct_prefix": [
+   0.4,
+   0.3076923076923077,
+   0.5625,
+   0.5
+  ],
+  "share_correct_with_wrong_hop": 0.9230769230769231,
+  "complements": 79,
+  "substitutes": 38,
+  "belief_dp_worst_shortfall_vs_never": 19.678571428571423
+ }
+}

@@ -1,9 +1,9 @@
 {
  "all_runs": {
   "P1": {
-   "held": true,
-   "spearman": 0.8587444074005025,
-   "n_cells": 78
+   "held": false,
+   "spearman": 0.6006250671619938,
+   "n_cells": 282
   },
   "P2": {
    "held": true,
@@ -13,31 +13,31 @@
   },
   "P3": {
    "held": false,
-   "n": 56,
-   "fraction_ge8": 0.7857142857142857,
-   "median": 16.89551534794618
+   "n": 246,
+   "fraction_ge8": 0.4796747967479675,
+   "median": 7.070022714833055
   },
   "P4": {
-   "held": true,
-   "pearson": 0.8810590962824381
+   "held": false,
+   "pearson": 0.6930328373511364
   },
   "P5": {
-   "held": true,
-   "fraction_le1": 1.0,
-   "max": 0.8805316091954012,
-   "n": 78
+   "held": false,
+   "fraction_le1": 0.7730496453900709,
+   "max": 44.26470588235293,
+   "n": 282
   },
   "P7": {
    "held": true,
-   "max": 0.0,
-   "n": 6
+   "max": 2.590364583333333,
+   "n": 24
   }
  },
  "new_runs_only": {
   "P1": {
    "held": true,
-   "spearman": 0.9222205644732333,
-   "n_cells": 30
+   "spearman": 0.84090404759976,
+   "n_cells": 66
   },
   "P2": {
    "held": true,
@@ -47,35 +47,267 @@
   },
   "P3": {
    "held": false,
-   "n": 16,
-   "fraction_ge8": 0.75,
-   "median": 16.41333867949746
+   "n": 46,
+   "fraction_ge8": 0.5217391304347826,
+   "median": 9.452564368770766
   },
   "P4": {
-   "held": true,
-   "pearson": 0.9687648021468781
+   "held": false,
+   "pearson": 0.7640482712027534
   },
   "P5": {
    "held": true,
-   "fraction_le1": 1.0,
-   "max": 0.845486111111093,
-   "n": 30
+   "fraction_le1": 0.9545454545454546,
+   "max": 2.590364583333333,
+   "n": 66
   },
   "P7": {
    "held": true,
-   "max": 0.0,
-   "n": 6
+   "max": 2.590364583333333,
+   "n": 24
   }
  },
  "runs": [
+  "arith6_gpu_0p5b",
+  "arith6_gpu_0p5b_matched",
+  "arith6_q35_0p8b",
+  "arith6_q35_0p8b_matched",
+  "gpu_0p5b_seed20261201",
+  "musique_k2_gpu_0p5b",
+  "musique_k2_q35_0p8b",
+  "musique_k3_gpu_0p5b",
+  "musique_k3_q35_0p8b",
+  "musique_k4_gpu_0p5b",
+  "musique_k4_q35_0p8b",
   "primary_0p5b",
   "q35_0p8b",
   "q35_0p8b_incremental",
   "q35_0p8b_seed20261120",
+  "q35_0p8b_seed20261201",
   "q35_2b",
   "q35_4b",
   "q35_9b"
  ],
+ "v1_protocol_literal": {
+  "P1": {
+   "held": false,
+   "spearman": 0.45018669168468906,
+   "n_cells": 150
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 130,
+   "fraction_ge8": 0.2,
+   "median": 3.912261904761904
+  },
+  "P4": {
+   "held": false,
+   "pearson": 0.47773537297606217
+  },
+  "P5": {
+   "held": false,
+   "fraction_le1": 0.64,
+   "max": 44.26470588235293,
+   "n": 150
+  },
+  "P7": {
+   "held": true,
+   "max": 2.590364583333333,
+   "n": 24
+  }
+ },
+ "v1_as_protocol_all_signals": {
+  "P1": {
+   "held": true,
+   "spearman": 0.84090404759976,
+   "n_cells": 66
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 46,
+   "fraction_ge8": 0.5217391304347826,
+   "median": 9.452564368770766
+  },
+  "P4": {
+   "held": false,
+   "pearson": 0.7640482712027532
+  },
+  "P5": {
+   "held": true,
+   "fraction_le1": 0.9545454545454546,
+   "max": 2.590364583333333,
+   "n": 66
+  },
+  "P7": {
+   "held": true,
+   "max": 2.590364583333333,
+   "n": 24
+  }
+ },
+ "v1_plus_6step_committed_prices": {
+  "P1": {
+   "held": false,
+   "spearman": 0.643925574508306,
+   "n_cells": 102
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 82,
+   "fraction_ge8": 0.3170731707317073,
+   "median": 4.0845238095238106
+  },
+  "P4": {
+   "held": false,
+   "pearson": 0.7599048640162033
+  },
+  "P5": {
+   "held": true,
+   "fraction_le1": 0.9411764705882353,
+   "max": 2.590364583333333,
+   "n": 102
+  },
+  "P7": {
+   "held": true,
+   "max": 2.590364583333333,
+   "n": 24
+  }
+ },
+ "v1_plus_6step_matched_prices": {
+  "P1": {
+   "held": true,
+   "spearman": 0.8412111120149485,
+   "n_cells": 102
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 82,
+   "fraction_ge8": 0.6585365853658537,
+   "median": 15.38728889811739
+  },
+  "P4": {
+   "held": false,
+   "pearson": 0.781687386711281
+  },
+  "P5": {
+   "held": false,
+   "fraction_le1": 0.8921568627450981,
+   "max": 10.416276041666666,
+   "n": 102
+  },
+  "P7": {
+   "held": true,
+   "max": 2.590364583333333,
+   "n": 24
+  }
+ },
+ "replication_pools_20261201": {
+  "P1": {
+   "held": true,
+   "spearman": 0.7728628365216751,
+   "n_cells": 48
+  },
+  "P2": {
+   "held": false,
+   "n": 0,
+   "fraction_le3": null,
+   "max": null
+  },
+  "P3": {
+   "held": false,
+   "n": 40,
+   "fraction_ge8": 0.75,
+   "median": 16.930244252873564
+  },
+  "P4": {
+   "held": true,
+   "pearson": 0.8053957117043556
+  },
+  "P5": {
+   "held": true,
+   "fraction_le1": 0.9583333333333334,
+   "max": 2.843650793650795,
+   "n": 48
+  },
+  "P7": {
+   "held": false,
+   "max": null,
+   "n": 0
+  }
+ },
+ "v2_unseen_runs": {
+  "n_cells": 66,
+  "V1": {
+   "held": true,
+   "pearson": 0.9724409287566923,
+   "closed_form_pearson": 0.8656545532698627
+  },
+  "V2": {
+   "held": true,
+   "mae": 0.9047847085486693,
+   "closed_form_mae": 2.3062988535163513
+  },
+  "V3": {
+   "held": true,
+   "n_informative_cells": 36,
+   "mae_signal_informative": 1.0388667683600827,
+   "mae_closed_informative": 3.3321986623680426,
+   "mae_difference_on_S0": 0.33133284611934766
+  },
+  "V4": {
+   "held": true,
+   "n": 29,
+   "pearson": 0.8987657415736013
+  }
+ },
+ "v2_exploratory_runs_not_a_test": {
+  "n_cells": 120,
+  "V1": {
+   "held": true,
+   "pearson": 0.9875255125182052,
+   "closed_form_pearson": 0.8470317038990175
+  },
+  "V2": {
+   "held": true,
+   "mae": 0.5252271216784584,
+   "closed_form_mae": 1.7488683726815468
+  },
+  "V3": {
+   "held": true,
+   "n_informative_cells": 84,
+   "mae_signal_informative": 0.6655023470305826,
+   "mae_closed_informative": 2.3265397355616892,
+   "mae_difference_on_S0": 0.20305026343771335
+  },
+  "V4": {
+   "held": true,
+   "n": 68,
+   "pearson": 0.9644321036339318
+  }
+ },
  "P6": {
   "held": true,
   "ratios": {

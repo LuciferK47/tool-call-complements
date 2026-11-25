@@ -273,7 +273,7 @@ def default_sizes(n: int):
     return {"train": tr, "cal": ca, "gate": ga, "test": n - tr - ca - ga}
 
 
-def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=None, MS=MS_DEFAULT):
+def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=None, MS=MS_DEFAULT, price_scale=1.0):
     """For every signal: fit the step-correctness signal (Platt or isotonic, chosen on the GATE split), then run every rule on composites of m
     parts. feats: name -> (N, 2^K-1, d); Y: (N, 2^K-1) step correctness; leaf: (N, 2^K) final correctness."""
     sp = make_splits(ids, sizes, seed)
@@ -298,12 +298,12 @@ def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=N
         res = {"auroc_step_test": float(auroc), "brier_step_test": float(np.mean((pt - yt) ** 2)), "calibrator": pick, "gate_logloss": gate,
                "mean_p_by_level": means, "m": {}}
         rng = np.random.default_rng(1000 + seed)
-        tau1 = {lam: tune(P[ca], leaf[ca], 1, lam, np.random.default_rng(7), P[ca]) for lam in LAMBDAS}
+        tau1 = {lam: tune(P[ca], leaf[ca], 1, price_scale * lam, np.random.default_rng(7), P[ca]) for lam in LAMBDAS}
         rules = {}
         for m in MS:
             T = len(means) * m
             for lam in LAMBDAS:
-                pr = lam / m
+                pr = price_scale * lam / m
                 W = belief_dp(samples, T, pr)
                 rules[(m, lam)] = {"never": rule_threshold(-np.inf), "always": rule_threshold(np.inf), "all_or_nothing": rule_all_or_nothing(pr, T),
                                    "local": rule_local(pr), "optimistic": rule_optimistic(pr), "pessimistic": rule_pessimistic(pr, means, T),
@@ -316,8 +316,8 @@ def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=N
             for name in RULES:
                 U, S, Kc = [], [], []
                 for lam in LAMBDAS:
-                    ok, c = hindsight(leaf, tp, lam / m) if name == "hindsight" else simulate(P, leaf, tp, rules[(m, lam)][name])
-                    U.append(float((ok - lam / m * c).mean()))
+                    ok, c = hindsight(leaf, tp, price_scale * lam / m) if name == "hindsight" else simulate(P, leaf, tp, rules[(m, lam)][name])
+                    U.append(float((ok - price_scale * lam / m * c).mean()))
                     S.append(float(ok.mean()))
                     Kc.append(float(c.mean() / m))
                 block[name] = {"u_auc": float(auc(np.array(U))), "u_by_lam": U, "success_by_lam": S, "calls_per_part_by_lam": Kc}
@@ -331,14 +331,14 @@ def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=N
                     g = len(q) // m
                     tb = q[:g * m].reshape(g, m)
                     for n in names:
-                        u = [float((lambda r_: (r_[0] - lam / m * r_[1]).mean())(simulate(P, leaf, tb, rules[(m, lam)][n]))) for lam in LAMBDAS]
+                        u = [float((lambda r_: (r_[0] - price_scale * lam / m * r_[1]).mean())(simulate(P, leaf, tb, rules[(m, lam)][n]))) for lam in LAMBDAS]
                         boot[n].append(float(auc(np.array(u))))
                 for n in names:
                     if n == "belief_dp":
                         continue
                     d = np.array(boot["belief_dp"]) - np.array(boot[n])
                     con[n] = {"diff": block["belief_dp"]["u_auc"] - block[n]["u_auc"], "ci_lo": float(np.percentile(d, 2.5)), "ci_hi": float(np.percentile(d, 97.5))}
-            res["m"][str(m)] = {"n_tuples": int(len(tp)), "rules": block, "belief_dp_minus": con}
+            res["m"][str(m)] = {"n_tuples": int(len(tp)), "rules": block, "belief_dp_minus": con, "signal_aware_regret": predicted_regret_signal(samples, m, price_scale)}
         out[sig] = res
     return out
 
@@ -369,11 +369,38 @@ def rule_expected_utility(rule: str, p_levels, T: int, c: float) -> float:
     return b - c * calls
 
 
-def predicted_regret(p_levels, m: int, rules=("local", "optimistic", "pessimistic")):
+def predicted_regret(p_levels, m: int, rules=("local", "optimistic", "pessimistic"), price_scale=1.0):
     """U-AUC regret (points) of each per-step rule against the best open-loop call set, from p_levels alone; per-call price lambda/m."""
     T = len(p_levels) * m
     out = {}
     for r in rules:
-        gaps = [rule_expected_utility("optimal_open_loop", p_levels, T, lam / m) - rule_expected_utility(r, p_levels, T, lam / m) for lam in LAMBDAS]
+        gaps = [rule_expected_utility("optimal_open_loop", p_levels, T, price_scale * lam / m) - rule_expected_utility(r, p_levels, T, price_scale * lam / m) for lam in LAMBDAS]
         out[r] = float(auc(np.array(gaps)))
     return out
+
+
+def predicted_regret_signal(samples, m: int, price_scale: float = 1.0, G: int = 3000, seed: int = 0) -> float:
+    """Signal-aware prediction of the per-step regret (U-AUC points): no test data, no fitted parameter.
+    Draws G sequences of T calibrated step probabilities from the per-position training laws `samples` (as Belief-DP assumes: independent), runs the
+    label-free rules on them (success probability of a sequence = product of the drawn p at unaided steps), and returns
+    best label-free rule minus best per-step rule. With a constant signal this is the closed-form regret of predicted_regret."""
+    K = len(samples)
+    T = K * m
+    rng = np.random.default_rng(seed)
+    means = [float(s.mean()) for s in samples]
+    P = np.stack([rng.choice(samples[j % K], G) for j in range(T)], 1)
+    U = {}
+    for lam in LAMBDAS:
+        c = price_scale * lam / m
+        W = belief_dp(samples, T, c)
+        rules = {"never": None, "always": None, "all_or_nothing": rule_all_or_nothing(c, T), "local": rule_local(c), "optimistic": rule_optimistic(c),
+                 "pessimistic": rule_pessimistic(c, means, T), "belief_dp": rule_dp(W, c)}
+        for n, r in rules.items():
+            b, k = np.ones(G), np.zeros(G)
+            for j in range(T):
+                a = np.zeros(G, bool) if n == "never" else np.ones(G, bool) if n == "always" else np.asarray(r(j, b, P[:, j], P[:, j]), bool)
+                k += a
+                b = np.where(a, b, b * P[:, j])
+            U.setdefault(n, []).append(float((b - c * k).mean()))
+    u = {n: float(auc(np.array(v))) for n, v in U.items()}
+    return max(u.values()) - max(u[r] for r in ("local", "optimistic", "pessimistic"))

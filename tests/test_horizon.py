@@ -149,3 +149,18 @@ def test_scaling_limit_of_per_step_regret():
             best_p = max(best_p, opt - rule_expected_utility("pessimistic", [p], T, c))
         assert abs(best_o - (x - 1 + np.exp(-x))) < 0.01, (x, best_o)
         assert abs(best_p - (1 - (1 + x) * np.exp(-x))) < 0.01, (x, best_p)
+
+
+def test_signal_aware_equals_closed_form_for_constant_signal():
+    """With a constant (uninformative) signal the signal-aware prediction must reduce to the closed-form regret of the best per-step rule."""
+    from toolcomp.horizon import predicted_regret, predicted_regret_signal
+    for p, m, scale in ((0.7, 2, 1.0), (0.9, 4, 1.0), (0.6, 1, 0.5)):
+        samples = [np.full(60, p)] * 3
+        closed = min(predicted_regret([p] * 3, m, price_scale=scale).values())
+        assert abs(predicted_regret_signal(samples, m, scale, G=50) - closed) < 0.2, (p, m, scale)
+
+
+def test_signal_aware_is_zero_for_a_perfect_signal():
+    from toolcomp.horizon import predicted_regret_signal
+    samples = [np.concatenate([np.full(30, 0.02), np.full(30, 0.999)])] * 3
+    assert predicted_regret_signal(samples, 1, G=2000) < 2.0

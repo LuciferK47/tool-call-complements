@@ -33,9 +33,10 @@ def cells(res):
             best = max(u.values())
             bps = best - max(u[r] for r in PER_STEP)
             bdp = max(u[r] for r in LABEL_FREE) - u["belief_dp"]
-            pr = predicted_regret(res["step_accuracy"], m)
+            pr = predicted_regret(res["step_accuracy"], m, price_scale=res.get("price_scale", 1.0))
+            sa = float(np.mean([res["runs"][f"partition_{i}"][sig]["m"][str(m)]["signal_aware_regret"] for i in range(3)])) if "signal_aware_regret" in res["runs"]["partition_0"][sig]["m"][str(m)] else None
             out.append({"tag": res["tag"], "sig": sig, "m": m, "T": res["K"] * m, "x": res["x_by_m"][str(m)], "best_per_step_regret": bps,
-                        "dp_vs_label_free": bdp, "dp_vs_all": best - u["belief_dp"], "predicted_best_per_step": min(pr.values()), "u": u})
+                        "dp_vs_label_free": bdp, "dp_vs_all": best - u["belief_dp"], "predicted_best_per_step": min(pr.values()), "signal_aware": sa, "u": u})
     return out
 
 
@@ -57,6 +58,28 @@ def score(C, fresh_tag="q35_0p8b_seed20261120"):
     return P
 
 
+def score_v2(C, ceiling=15.0):
+    """Second prediction set (configs/predictions_v2.yaml): signal-aware prediction against the measured per-step regret."""
+    C = [c for c in C if c["signal_aware"] is not None]
+    r = np.array([c["best_per_step_regret"] for c in C]); sa = np.array([c["signal_aware"] for c in C]); cf = np.array([c["predicted_best_per_step"] for c in C])
+    out = {"n_cells": len(C)}
+    pe = pearsonr(sa, r)[0]
+    out["V1"] = {"held": bool(pe >= 0.9), "pearson": float(pe), "closed_form_pearson": float(pearsonr(cf, r)[0])}
+    out["V2"] = {"held": bool(np.abs(sa - r).mean() <= 2.0), "mae": float(np.abs(sa - r).mean()), "closed_form_mae": float(np.abs(cf - r).mean())}
+    s0 = np.array([c["sig"] == "S0" for c in C])
+    d_s0 = abs(np.abs(sa - r)[s0].mean() - np.abs(cf - r)[s0].mean()) if s0.any() else None
+    better = bool((np.abs(sa - r)[~s0].mean() < np.abs(cf - r)[~s0].mean())) if (~s0).any() else None
+    out["V3"] = {"held": bool(better and d_s0 is not None and d_s0 <= 1.0), "n_informative_cells": int((~s0).sum()), "mae_signal_informative": float(np.abs(sa - r)[~s0].mean()) if (~s0).any() else None,
+                 "mae_closed_informative": float(np.abs(cf - r)[~s0].mean()) if (~s0).any() else None, "mae_difference_on_S0": float(d_s0) if d_s0 is not None else None}
+    mid = (r > 0.3) & (r < ceiling)
+    out["V4"] = {"held": bool(mid.sum() > 2 and pearsonr(sa[mid], r[mid])[0] >= 0.85), "n": int(mid.sum()), "pearson": float(pearsonr(sa[mid], r[mid])[0]) if mid.sum() > 2 else None}
+    return out
+
+
+V2_RUNS = ["primary_0p5b", "q35_0p8b", "q35_2b", "q35_4b", "q35_9b"]          # configs/predictions_v2.yaml: unseen_prediction_only
+EXPLORATORY = ["arith6_gpu_0p5b", "arith6_q35_0p8b", "arith6_gpu_0p5b_matched", "arith6_q35_0p8b_matched", "gpu_0p5b_seed20261201", "q35_0p8b_seed20261201"]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", default=str(ROOT / "results" / "scaling"))
@@ -69,6 +92,15 @@ def main():
     allc = [c for t in tags for c in cells(R[t])]
     new = [c for c in allc if c["tag"] in NEW_RUNS or not c["tag"].startswith(("q35_0p8b", "gpu_0p5b", "primary"))]
     out = {"all_runs": score(allc), "new_runs_only": score([c for c in allc if c["tag"] in NEW_RUNS]) if any(c["tag"] in NEW_RUNS for c in allc) else None, "runs": tags}
+    byt = lambda tt: [c for t in tt if t in R for c in cells(R[t])]
+    MUS = [t for t in R if t.startswith("musique_")]
+    out["v1_protocol_literal"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b", "arith6_q35_0p8b"] + MUS))          # protocol text: new runs + every gpu run that returned
+    out["v1_as_protocol_all_signals"] = score(byt(NEW_RUNS))                                    # the five pre-registered runs, every signal available
+    out["v1_plus_6step_committed_prices"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b", "arith6_q35_0p8b"]))
+    out["v1_plus_6step_matched_prices"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b_matched", "arith6_q35_0p8b_matched"]))
+    out["replication_pools_20261201"] = score(byt(["gpu_0p5b_seed20261201", "q35_0p8b_seed20261201"]))
+    out["v2_unseen_runs"] = score_v2(byt(V2_RUNS))
+    out["v2_exploratory_runs_not_a_test"] = score_v2(byt(EXPLORATORY))
     # P6 (pair counts, K=3 runs only)
     sd = {t: R[t].get("second_differences") for t in tags if R[t].get("second_differences")}
     ratio = {t: sd[t]["complements"] / max(1, sd[t]["substitutes"]) for t in sd}

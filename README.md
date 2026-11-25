@@ -15,8 +15,8 @@ earlier iterations, the horizon study with the belief-state dynamic program, and
 | `toolcomp/scaling.py` | loaders for every kind of stored tree; regret-versus-x analysis |
 | `scripts/` | tree building, Iteration 1-2 analyses, `run_scaling.py`, `run_label_efficiency.py`, `check_predictions.py`, `make_paper_assets.py`, `run_gpu.py` |
 | `configs/` | run configurations (copies of the frozen ones; comments refer to documents not included here) and `predictions.yaml` |
-| `data/` | reply texts of five 3-step runs (`trees_text/`), the pre-registered 0.5B contrasts |
-| `results/` | horizon results for seven runs, label efficiency, scored predictions |
+| `data/` | reply texts of five 3-step runs (`trees_text/`), compact arrays of the RTX 4050 runs (`gpu_rtx4050/`: 6-step chains, fresh pools), the pre-registered 0.5B contrasts |
+| `results/` | horizon results for 19 runs (nine 3-step, four 6-step variants, six MuSiQue), label efficiency, MuSiQue summary, scored predictions |
 | `ideation/` | the deterministic parts of the Task 3 ideation pipeline |
 | `tests/` | unit tests; the theory propositions are checked against brute force |
 
@@ -36,3 +36,5 @@ Full trees (hidden states, draft confidence) for the 0.5B and 0.8B runs are abou
 
 `configs/predictions.yaml` and `configs/predictions_protocol.yaml` were committed before the 2B, 4B, 9B, fresh-pool and hidden-operand runs were analysed
 (see the commit history); `scripts/check_predictions.py` scores them and writes `results/predictions_scored.json`.
+
+`configs/predictions_v2.yaml` (signal-aware prediction; commit `28277f1`) was committed before that prediction was computed on the runs it names as unseen; it is post hoc with respect to the first set. MuSiQue trees are not stored (the dataset text is not redistributed); rebuild them with `scripts/run_gpu.py`, then `scripts/musique_summary.py`.
