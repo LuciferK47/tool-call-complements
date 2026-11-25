@@ -8,9 +8,10 @@
 
 Per model it builds, in this order (each step is skipped if already finished):
   light    compact exports (confidence, entropy, token counts, 64-d hidden PCA) of any existing tree in cache/
-  fresh    a fresh 3-step arithmetic pool (generator seed 20261201, 1000 instances; scripts/build_tree.py)
   arith6   600 (l40s) / 400 (rtx4050) instances of a genuine 6-step dependent arithmetic chain (63 decision nodes)
   musique  2-, 3- and 4-hop MuSiQue questions with BM25 retrieval as the (noisy) tool
+  fresh    a fresh 3-step arithmetic pool (generator seed 20261201, 1000 instances; scripts/build_tree.py)  [last: least important]
+If you must stop early, run:  python scripts/run_gpu.py --bundle-only   and send the bundle.
 Do not edit configs or code. If a step fails the script stops and bundles what exists; send the bundle and out/status.json back.
 """
 
@@ -30,7 +31,7 @@ PROFILES = {
     "l40s": {"models": ["q35_2b", "q35_4b", "q35_9b"], "n_arith6": 600, "n_musique": {2: 300, 3: 200, 4: 100}, "batch": 32},
     "rtx4050": {"models": ["gpu_0p5b", "q35_0p8b"], "n_arith6": 400, "n_musique": {2: 200, 3: 150, 4: 80}, "batch": 16},
 }
-STEPS = ("light", "fresh", "arith6", "musique")
+STEPS = ("light", "arith6", "musique", "fresh")
 FRESH_SEED, ARITH6_SEED, MUSIQUE_SEED = 20261201, 20261301, 20261401
 OUT = ROOT / "out"
 STATUS = OUT / "status.json"
@@ -120,7 +121,7 @@ def do_deep(cfg_name, kind, prof, smoke):
         a = res["arrays"]
         done.append(f"{tag}: n={a['leaf_correct'].shape[0]} never={a['leaf_correct'][:, 0].mean():.3f} all-call={a['leaf_correct'][:, -1].mean():.3f}")
         sane = a["leaf_correct"][:, -1].mean() >= a["leaf_correct"][:, 0].mean() - 1e-9
-        if not sane:
+        if kind == "arith6" and not sane:                       # exact tool: calling every step can never be worse than calling none
             return False, f"{tag}: calling every step is worse than never calling (check outputs); " + "; ".join(done)
     return True, "; ".join(done)
 
@@ -144,7 +145,11 @@ def main():
     ap.add_argument("--only", default=",".join(STEPS))
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--bundle-only", action="store_true", help="just pack whatever is in out/ (use after stopping early)")
     args = ap.parse_args()
+    if args.bundle_only:
+        bundle("partial")
+        return
     prof = PROFILES[args.profile]
     models = args.models.split(",") if args.models else prof["models"]
     only = args.only.split(",")
