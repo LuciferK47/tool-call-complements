@@ -1,0 +1,87 @@
+{
+ "all_runs": {
+  "P1": {
+   "held": true,
+   "spearman": 0.8587444074005025,
+   "n_cells": 78
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 56,
+   "fraction_ge8": 0.7857142857142857,
+   "median": 16.89551534794618
+  },
+  "P4": {
+   "held": true,
+   "pearson": 0.8810590962824381
+  },
+  "P5": {
+   "held": true,
+   "fraction_le1": 1.0,
+   "max": 0.8805316091954012,
+   "n": 78
+  },
+  "P7": {
+   "held": true,
+   "max": 0.0,
+   "n": 6
+  }
+ },
+ "new_runs_only": {
+  "P1": {
+   "held": true,
+   "spearman": 0.9222205644732333,
+   "n_cells": 30
+  },
+  "P2": {
+   "held": true,
+   "n": 6,
+   "fraction_le3": 1.0,
+   "max": 0.01999999999999602
+  },
+  "P3": {
+   "held": false,
+   "n": 16,
+   "fraction_ge8": 0.75,
+   "median": 16.41333867949746
+  },
+  "P4": {
+   "held": true,
+   "pearson": 0.9687648021468781
+  },
+  "P5": {
+   "held": true,
+   "fraction_le1": 1.0,
+   "max": 0.845486111111093,
+   "n": 30
+  },
+  "P7": {
+   "held": true,
+   "max": 0.0,
+   "n": 6
+  }
+ },
+ "runs": [
+  "primary_0p5b",
+  "q35_0p8b",
+  "q35_0p8b_incremental",
+  "q35_0p8b_seed20261120",
+  "q35_2b",
+  "q35_4b",
+  "q35_9b"
+ ],
+ "P6": {
+  "held": true,
+  "ratios": {
+   "q35_2b": 2.264367816091954,
+   "q35_4b": 1.3478260869565217,
+   "q35_9b": 1.1304347826086956
+  }
+ }
+}

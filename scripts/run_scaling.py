@@ -45,8 +45,8 @@ def main():
         cfg = load_config(a.config)
         tree = TreeData.load(Path(a.tree))
         ins = generate_instances(cfg["pool"]["n"], cfg["pool"]["seed"], cfg["pool"]["prefix"])
-        prior = json.loads(Path(a.results).read_text())["partition_0"]["fit_info"]["mup"]
-        run = scaling.run_from_tree(a.tag, a.model, tree, ins, prior)
+        J = json.loads(Path(a.results).read_text())
+        run = scaling.run_from_tree(a.tag, a.model, tree, ins, [J[f"partition_{r}"]["fit_info"]["mup"] for r in range(len(SEEDS))])
     elif a.kind == "light":
         run = scaling.run_from_light(a.tag, a.model, a.light, Path(a.light).with_suffix(".json"), a.seed)
     else:

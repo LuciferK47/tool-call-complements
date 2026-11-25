@@ -35,6 +35,7 @@ class Run:
     call_ok: np.ndarray                   # (N, 2^K - 1) step correctness when the tool is called
     feats: Dict[str, np.ndarray] = field(default_factory=dict)
     C: Dict[str, float] = field(default_factory=dict)
+    per_partition: Dict[int, dict] = field(default_factory=dict)   # partition index -> {"feats": {...}, "C": {...}} overrides (hidden-state layer chosen per partition)
     note: str = ""
 
     @property
@@ -78,11 +79,15 @@ def run_from_text(tag, model, sidecar, seed):
 
 
 # ---------------------------------------------------------------------------------- full trees and light exports
-def run_from_tree(tag, model, tree, ins, prior):
+def run_from_tree(tag, model, tree, ins, priors):
+    """priors: list (one per partition) of the frozen {"layer", "C"} of the hidden-state probe, as chosen in Iteration 1."""
     from .features import draft_features, hidden_features
-    S0, S1, S4 = surface_nobin(tree, ins), hidden_features(tree, prior["layer"]), draft_features(tree)
+    S0, S4 = surface_nobin(tree, ins), draft_features(tree)
+    per = {}
+    for r, pr in enumerate(priors):
+        per[r] = {"feats": {"S0": S0, "S1": hidden_features(tree, pr["layer"]), "S4": S4, "S0+S4": np.concatenate([S0, S4], -1)}, "C": {"S1": pr["C"]}}
     return Run(tag, model, "arith3", 3, list(tree.instance_ids), tree.leaf_correct, tree.local_no_correct, tree.v_in_ok,
-               {"S0": S0, "S1": S1, "S4": S4, "S0+S4": np.concatenate([S0, S4], -1)}, {"S1": prior["C"]})
+               per[0]["feats"], per[0]["C"], per_partition=per)
 
 
 def run_from_light(tag, model, npz, sidecar, seed, prefix="e1"):
@@ -183,9 +188,12 @@ def x_of(run: Run, m: int) -> float:
 
 def evaluate_run(run: Run, seeds, MS, reps=40, B=0, sizes=None, signals=None):
     sizes = sizes or default_sizes(run.n)
-    feats = {k: v for k, v in run.feats.items() if signals is None or k in signals}
-    return {f"partition_{r}": evaluate_signals(feats, run.Y, run.leaf, run.ids, sizes, s, run.C, B if r == 0 else 0, reps, None, MS)
-            for r, s in enumerate(seeds)}
+    out = {}
+    for r, s in enumerate(seeds):
+        ov = run.per_partition.get(r, {})
+        feats = {k: v for k, v in ov.get("feats", run.feats).items() if signals is None or k in signals}
+        out[f"partition_{r}"] = evaluate_signals(feats, run.Y, run.leaf, run.ids, sizes, s, ov.get("C", run.C), B if r == 0 else 0, reps, None, MS)
+    return out
 
 
 def complement_counts(run: Run):
