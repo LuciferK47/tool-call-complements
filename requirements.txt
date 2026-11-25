@@ -5,6 +5,5 @@ PyYAML>=6
 sympy>=1.12
 matplotlib>=3.8
 pytest>=8
-rank_bm25>=0.2.2
 torch>=2.2
 transformers>=4.50

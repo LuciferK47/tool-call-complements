@@ -203,7 +203,14 @@ def ensure_musique(path: Path) -> Path:
     if path.exists() and hashlib.sha256(path.read_bytes()).hexdigest() == MUSIQUE_SHA256:
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    urllib.request.urlretrieve(MUSIQUE_URL, path)
+    try:
+        req = urllib.request.Request(MUSIQUE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=120) as r, open(path, "wb") as f:
+            f.write(r.read())
+    except Exception:
+        from huggingface_hub import hf_hub_download
+        got = hf_hub_download("dgslibisey/MuSiQue", "musique_ans_v1.0_dev.jsonl", repo_type="dataset", revision=MUSIQUE_URL.split("/resolve/")[1].split("/")[0])
+        path.write_bytes(Path(got).read_bytes())
     got = hashlib.sha256(path.read_bytes()).hexdigest()
     assert got == MUSIQUE_SHA256, f"MuSiQue dev file checksum mismatch: {got}"
     return path
