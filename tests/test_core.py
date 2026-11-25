@@ -1,4 +1,4 @@
-"""Core tests. They target the defects found in the archived simulated pass (docs/03 I-001..I-008)."""
+"""Core tests. They target the defects found in the archived simulated pass."""
 
 import itertools
 

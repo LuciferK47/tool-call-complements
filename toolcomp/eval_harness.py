@@ -1,6 +1,6 @@
 """Evaluation harness: utilities, U-AUC, paired bootstrap, Holm correction, rank-reversal statistics.
 
-Definitions (docs/00 D3, D4; Task 3 P1-I3):
+Definitions:
   U(lambda)      = Acc - (lambda/N) * sum_i calls_i * c          (cumulative per-trajectory cost, c = 1)
   U_any(alpha)   = Acc - alpha * mean_i 1[calls_i > 0]           (anchor-style single indicator per response)
   U-AUC          = trapezoid mean of U(lambda) over the grid, x100 ("points")

@@ -1,0 +1,676 @@
+{
+ "stage": "S7",
+ "roles": [
+  "OPTIMIST",
+  "METHODOLOGIST",
+  "SKEPTIC"
+ ],
+ "scale": {
+  "1": "absent/serious flaw",
+  "2": "weak",
+  "3": "adequate",
+  "4": "strong",
+  "5": "exceptional, evidenced"
+ },
+ "weights": {
+  "novelty": 0.25,
+  "feasibility": 0.25,
+  "impact": 0.2,
+  "testability": 0.15,
+  "clarity": 0.1,
+  "distinctiveness": 0.05
+ },
+ "note": "Triples are [optimist, methodologist, skeptic]. LLM scores are NOT objective measurements; same model played all roles.",
+ "scores": {
+  "P1-C01": {
+   "novelty": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Oracle headroom analysis is standard; unmeasured for tool-call chains (E7 probes once)"
+   },
+   "feasibility": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "Offline deterministic tools, local 4-8B model; branching cost bounded"
+   },
+   "impact": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Decides whether P1 exists; a null result is still informative"
+   },
+   "testability": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Pre-registered threshold, held-out evaluation, permutation null"
+   },
+   "clarity": {
+    "s": [
+     5,
+     5,
+     4
+    ],
+    "why": "Clear definitions of oracle, split-half filter and stop rule"
+   },
+   "distinctiveness": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Measurement role differs from estimator ideas"
+   }
+  },
+  "P1-G1a": {
+   "novelty": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Off-policy doubly-robust counterfactual labels not in matrix; E11 runs both arms"
+   },
+   "feasibility": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Needs propensity logging and DR estimator; small data risks high variance"
+   },
+   "impact": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Label cost is the practical barrier for any step-level estimator"
+   },
+   "testability": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "Equal-rollout comparison with eps=0 control can fail"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "DR estimator needs careful write-up for implementers"
+   },
+   "distinctiveness": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "Distinct: changes label source, not estimator"
+   }
+  },
+  "P1-G2b": {
+   "novelty": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Hidden-state probe after a draft vs FLARE token-probability anticipation (E21)"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Draft generation and cached states; extra decoding cost to charge"
+   },
+   "impact": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Could change when decisions are made; break-even claim is useful"
+   },
+   "testability": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "AUROC gap and break-even cost ratio both measurable"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Simple intervention, clear metric"
+   },
+   "distinctiveness": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Only idea changing probe input timing"
+   }
+  },
+  "P1-G1b": {
+   "novelty": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Flip-level analysis of tool necessity absent from matrix"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Needs C01 labels first; flips may be rare so detector data-starved"
+   },
+   "impact": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Explains where headroom lives; informs features for MUP"
+   },
+   "testability": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Flip rate >= 15% and AUROC gap falsifiable"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Flip definition depends on lambda; needs care"
+   },
+   "distinctiveness": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Target variable is new; overlaps C01 labels"
+   }
+  },
+  "P1-C02": {
+   "novelty": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Two-head utility probe resembles LNE/LUE (E12) at step level"
+   },
+   "feasibility": {
+    "s": [
+     5,
+     5,
+     4
+    ],
+    "why": "Linear heads on cached hidden states, seconds to train (E34)"
+   },
+   "impact": {
+    "s": [
+     5,
+     4,
+     3
+    ],
+    "why": "Core estimator for P1; value depends on E12 weakness being fixable"
+   },
+   "testability": {
+    "s": [
+     5,
+     5,
+     4
+    ],
+    "why": "Head-to-head vs need-probe on identical data"
+   },
+   "clarity": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Simple, easy to codify"
+   },
+   "distinctiveness": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Overlaps G1a/G1c as shared estimator family"
+   }
+  },
+  "P1-G2a": {
+   "novelty": {
+    "s": [
+     3,
+     2,
+     2
+    ],
+    "why": "Protocol contribution; cumulative-cost metrics are an extension of E1"
+   },
+   "feasibility": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Mostly accounting and bootstrap code"
+   },
+   "impact": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Prevents invalid comparisons; supports all other ideas"
+   },
+   "testability": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Rank-reversal Kendall tau test can fail"
+   },
+   "clarity": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Concrete metric definitions"
+   },
+   "distinctiveness": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Evaluation, not an estimator"
+   }
+  },
+  "P1-G1c": {
+   "novelty": {
+    "s": [
+     3,
+     2,
+     2
+    ],
+    "why": "Ensemble uncertainty for decisions is generic; step-level regret use is modest"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "B=10 linear probes are cheap"
+   },
+   "impact": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Helps under noisy labels; limited standalone impact"
+   },
+   "testability": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Noise-sweep comparison with point rule"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Clear single change"
+   },
+   "distinctiveness": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Overlaps the MUP estimator family"
+   }
+  },
+  "P2-G1b": {
+   "novelty": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Per-query p_tool plus confidently-wrong correction vs CTA global p_ret (E16)"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Query encoder + logistic; needs tool-run labels; E12 caution"
+   },
+   "impact": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "Targets author-stated black-box limitation G2 and CTA's open prior-estimation problem"
+   },
+   "testability": {
+    "s": [
+     5,
+     4,
+     4
+    ],
+    "why": "U-AUC vs CTA rule on 3 scenarios, net of signal cost"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Components well defined"
+   },
+   "distinctiveness": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Shares a lineage with G2c"
+   }
+  },
+  "P2-G2a": {
+   "novelty": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Benefit-ranked risk-controlled skipping not found; conformal tools exist (E30)"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Learn-then-Test calibration is cheap; needs a benefit estimator"
+   },
+   "impact": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Gives a guarantee-style claim users can act on"
+   },
+   "testability": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Risk guarantee and savings both measurable over random splits"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Procedure is explicit"
+   },
+   "distinctiveness": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Guarantee focus is unlike other P2 ideas"
+   }
+  },
+  "P2-C03": {
+   "novelty": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Sequential sampling for call decisions not found; classical SPRT idea"
+   },
+   "feasibility": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Sampling API only; works with any black box"
+   },
+   "impact": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Cuts signal cost (G5); bounded by how often queries stop early"
+   },
+   "testability": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Samples per query and net U measured directly"
+   },
+   "clarity": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Beta-Binomial stopping rule is simple"
+   },
+   "distinctiveness": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Only cost-of-signal idea"
+   }
+  },
+  "P2-G2c": {
+   "novelty": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Gating of a two-sided estimator is largely engineering"
+   },
+   "feasibility": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Needs tuning of gate thresholds jointly"
+   },
+   "impact": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Reduces estimator consultation; value hinges on G1b"
+   },
+   "testability": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Gate rate and U within 1 point are checkable"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Two-stage rule clear but thresholds fiddly"
+   },
+   "distinctiveness": {
+    "s": [
+     2,
+     2,
+     2
+    ],
+    "why": "Near-duplicate of G1b and the eliminated G1c"
+   }
+  },
+  "P2-G2b": {
+   "novelty": {
+    "s": [
+     4,
+     3,
+     3
+    ],
+    "why": "Cheap-preview value-of-information for tool benefit not found"
+   },
+   "feasibility": {
+    "s": [
+     3,
+     3,
+     3
+    ],
+    "why": "Preview differs per tool; implementable for retrieval only at first"
+   },
+   "impact": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Gains likely limited to retrieval scenario"
+   },
+   "testability": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "AUROC gain and net U after preview cost"
+   },
+   "clarity": {
+    "s": [
+     4,
+     4,
+     3
+    ],
+    "why": "Per-tool interface needs a clear spec"
+   },
+   "distinctiveness": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Distinct signal source"
+   }
+  },
+  "P2-C07": {
+   "novelty": {
+    "s": [
+     2,
+     2,
+     1
+    ],
+    "why": "Few-shot recalibration under shift is standard calibration practice"
+   },
+   "feasibility": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Isotonic maps and 50-200 labels"
+   },
+   "impact": {
+    "s": [
+     3,
+     3,
+     2
+    ],
+    "why": "Addresses G12 (in-distribution only) but generic"
+   },
+   "testability": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Fraction of lost U recovered is measurable"
+   },
+   "clarity": {
+    "s": [
+     5,
+     5,
+     5
+    ],
+    "why": "Simple"
+   },
+   "distinctiveness": {
+    "s": [
+     4,
+     4,
+     4
+    ],
+    "why": "Calibration under shift is a separate axis"
+   }
+  }
+ }
+}

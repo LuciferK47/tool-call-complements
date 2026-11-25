@@ -1,0 +1,98 @@
+{
+ "stage": "S6",
+ "generation": 0,
+ "problem": "P2",
+ "judge": "PAIRWISE (prompt S6)",
+ "judgments": [
+  {
+   "a": "P2-C01",
+   "b": "P2-C02",
+   "winner": "a",
+   "reason": "general; C02 helps mainly retrieval"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "C03 cleaner; C01 targets CTA gap but E12 risk"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "C01 attacks the main competitor's assumption"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C06",
+   "winner": "a",
+   "reason": "C01 is the core estimation problem"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C07 is generic calibration"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C03",
+   "winner": "b",
+   "reason": "C03 black-box native with clear metric"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C05",
+   "winner": "tie",
+   "reason": "C05 has remedy; C02 narrow but novel"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 gives guarantee-style falsifiable claim"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C07",
+   "winner": "tie",
+   "reason": "C07 sounder; C02 more novel but narrow"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "C03 directly cuts signal cost (G5)"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C06",
+   "winner": "tie",
+   "reason": "C06 distinctive guarantee; C03 cleaner and cheaper"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C03 more specific to tool calling"
+  },
+  {
+   "a": "P2-C05",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 more distinctive and testable"
+  },
+  {
+   "a": "P2-C05",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C05 tied to anchor gap G15 with a remedy"
+  },
+  {
+   "a": "P2-C06",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C06 more novel and falsifiable"
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+{
+ "stage": "S6",
+ "generation": 0,
+ "problem": "P1",
+ "judge": "PAIRWISE (prompt S6)",
+ "judgments": [
+  {
+   "a": "P1-C01",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "pre-registered falsifiable gate; C02 carries E12 counter-evidence"
+  },
+  {
+   "a": "P1-C01",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "measurement precedes estimator; sharper hypothesis"
+  },
+  {
+   "a": "P1-C01",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "C09 is a label ablation subsumed by C01"
+  },
+  {
+   "a": "P1-C01",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "C10 mostly an ablation; C01 decides whether P1 exists"
+  },
+  {
+   "a": "P1-C01",
+   "b": "P1-C12",
+   "winner": "a",
+   "reason": "C01 more decision-relevant and more novel"
+  },
+  {
+   "a": "P1-C02",
+   "b": "P1-C03",
+   "winner": "tie",
+   "reason": "C03 answers E12 noise; C02 is the core mechanism"
+  },
+  {
+   "a": "P1-C02",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "core mechanism beats label ablation"
+  },
+  {
+   "a": "P1-C02",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "core mechanism beats robustness ablation"
+  },
+  {
+   "a": "P1-C02",
+   "b": "P1-C12",
+   "winner": "a",
+   "reason": "C02 tests utility-vs-need; C12 tests feature family"
+  },
+  {
+   "a": "P1-C03",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "clearer mechanism and noise-sweep falsifier"
+  },
+  {
+   "a": "P1-C03",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "non-trivial hypothesis with noise sweep"
+  },
+  {
+   "a": "P1-C03",
+   "b": "P1-C12",
+   "winner": "tie",
+   "reason": "C12 cleaner and cheaper; C03 more novel but riskier"
+  },
+  {
+   "a": "P1-C09",
+   "b": "P1-C10",
+   "winner": "tie",
+   "reason": "both ablations; both falsifiable"
+  },
+  {
+   "a": "P1-C09",
+   "b": "P1-C12",
+   "winner": "b",
+   "reason": "C12 hypothesis quantitative, applies to all envs"
+  },
+  {
+   "a": "P1-C10",
+   "b": "P1-C12",
+   "winner": "b",
+   "reason": "C12 less trivial and more broadly testable"
+  }
+ ]
+}

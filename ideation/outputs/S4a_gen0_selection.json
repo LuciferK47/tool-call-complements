@@ -1,0 +1,278 @@
+{
+ "P1": {
+  "selected": [
+   "P1-C12",
+   "P1-C01",
+   "P1-C03",
+   "P1-C02",
+   "P1-C09",
+   "P1-C10"
+  ],
+  "table": [
+   {
+    "id": "P1-C12",
+    "mean": 3.8,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 3
+    },
+    "family_group": "signal"
+   },
+   {
+    "id": "P1-C01",
+    "mean": 3.6,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 3
+    },
+    "family_group": "label"
+   },
+   {
+    "id": "P1-C03",
+    "mean": 3.4,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 3
+    },
+    "family_group": "decision-focused"
+   },
+   {
+    "id": "P1-C02",
+    "mean": 3.4,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 2
+    },
+    "family_group": "probing"
+   },
+   {
+    "id": "P1-C09",
+    "mean": 3.2,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "credit"
+   },
+   {
+    "id": "P1-C10",
+    "mean": 3.2,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 2
+    },
+    "family_group": "evaluation"
+   },
+   {
+    "id": "P1-C06",
+    "mean": 3.2,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 2,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 3
+    },
+    "family_group": "conformal"
+   },
+   {
+    "id": "P1-C08",
+    "mean": 3.0,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 2,
+     "SKEPTIC": 3
+    },
+    "family_group": "multi-tool"
+   },
+   {
+    "id": "P1-C07",
+    "mean": 3.0,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "cascade"
+   },
+   {
+    "id": "P1-C11",
+    "mean": 2.8,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "steering"
+   },
+   {
+    "id": "P1-C04",
+    "mean": 2.6,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 2,
+     "FEASIBILITY": 3,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "sequential"
+   }
+  ]
+ },
+ "P2": {
+  "selected": [
+   "P2-C03",
+   "P2-C06",
+   "P2-C05",
+   "P2-C07",
+   "P2-C01",
+   "P2-C02"
+  ],
+  "table": [
+   {
+    "id": "P2-C03",
+    "mean": 4.0,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 5,
+     "SKEPTIC": 3
+    },
+    "family_group": "sequential"
+   },
+   {
+    "id": "P2-C06",
+    "mean": 3.6,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 3
+    },
+    "family_group": "conformal"
+   },
+   {
+    "id": "P2-C05",
+    "mean": 3.4,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 3
+    },
+    "family_group": "estimator"
+   },
+   {
+    "id": "P2-C07",
+    "mean": 3.4,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 4,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 2
+    },
+    "family_group": "calibration"
+   },
+   {
+    "id": "P2-C01",
+    "mean": 3.2,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 4,
+     "SKEPTIC": 2
+    },
+    "family_group": "calibration"
+   },
+   {
+    "id": "P2-C02",
+    "mean": 3.2,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 4,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 3
+    },
+    "family_group": "cheap"
+   },
+   {
+    "id": "P2-C08",
+    "mean": 3.0,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "learned"
+   },
+   {
+    "id": "P2-C09",
+    "mean": 3.0,
+    "scores": {
+     "NOVELTY": 2,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 5,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "verbal"
+   },
+   {
+    "id": "P2-C12",
+    "mean": 2.8,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 3,
+     "FEASIBILITY": 3,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 2
+    },
+    "family_group": "multi-model"
+   },
+   {
+    "id": "P2-C04",
+    "mean": 2.2,
+    "scores": {
+     "NOVELTY": 3,
+     "METHODOLOGY": 1,
+     "FEASIBILITY": 3,
+     "EXPERIMENTAL_DESIGN": 3,
+     "SKEPTIC": 1
+    },
+    "family_group": "probing"
+   }
+  ]
+ }
+}

@@ -1,6 +1,6 @@
 """Main experiment: gate, policies, primary contrasts (Holm), rank reversal, ablations, resampled partitions.
 
-Pre-registered analysis (docs/00 section 2 and docs/01 A-29..A-40). Everything is computed from the cached
+Pre-registered analysis. Everything is computed from the cached
 outcome tree (real model generations, real tool results, real hidden states). Run AFTER freezing the config.
 Usage: python scripts/run_experiments.py --config configs/primary.yaml
 """

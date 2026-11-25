@@ -4,7 +4,7 @@ Black-box interface: the controller sees only sampled answers (text) and, for on
 log-probability. Per query it draws samples one at a time (up to m_max), maps (m, agreement count s) to a calibrated
 probability that the modal answer is correct, and stops when that probability is clearly above or below the break-even
 q* = p_tool - lambda*c. Every sample costs rho (in units of one tool call). Replaces the earlier Beta-posterior version
-whose posterior treated agreement as Bernoulli correctness evidence (docs/01 A-38).
+whose posterior treated agreement as Bernoulli correctness evidence.
 """
 
 from __future__ import annotations

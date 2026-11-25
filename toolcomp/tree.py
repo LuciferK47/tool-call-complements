@@ -78,7 +78,7 @@ def parse_category(text: str) -> str:
 
 
 def parse_strict(text: str) -> Optional[int]:
-    """Strict parser (docs/01 A-44): the reply must be exactly one integer (optional trailing period, correct thousands
+    """Strict parser: the reply must be exactly one integer (optional trailing period, correct thousands
     grouping), or an expression whose part after the LAST '=' is exactly one integer. Decimals, malformed grouping,
     several numbers or thinking text are invalid (the step is then treated like a parse failure: wrong, shown as '?')."""
     cat = parse_category(text)
@@ -221,7 +221,7 @@ def _sha(obj) -> str:
 
 class TreeBuilder:
     """Builds the outcome tree. Checkpoints carry a fingerprint (model, resolved revision, dtype, device, system prompt,
-    layers, max_new_tokens, parser) and the hash of their prompt list; resuming with anything different raises (docs/03 I-021).
+    layers, max_new_tokens, parser) and the hash of their prompt list; resuming with anything different raises.
 
     `reuse` (optional): {user_prompt_text: NodeOutput} from an earlier build with the SAME generation fingerprint; prompts found
     there are not regenerated (used by primary_strict to re-score the cached CPU generations with the strict parser and to

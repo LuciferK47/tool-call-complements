@@ -311,7 +311,7 @@ def rollout_reference_actions(tree: TreeData, lam: float, cost: float = 1.0, con
 
 
 # =====================================================================================================
-# Extra policies (docs/01 A-45, A-46; pre-registration addendum 2). Switched on by config `extra_policies`.
+# Extra policies. Switched on by config `extra_policies`.
 # =====================================================================================================
 def walk_from(D: np.ndarray, nid: np.ndarray, level: int, prefix: np.ndarray):
     """Follow decision matrix D (N,7) from node `nid` at `level` (whose action prefix is `prefix`) to a leaf.

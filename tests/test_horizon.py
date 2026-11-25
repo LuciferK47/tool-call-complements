@@ -1,4 +1,4 @@
-"""Theory and simulator checks for src/oring.py (no model, no cache needed except the last test)."""
+"""Theory and simulator checks for toolcomp/horizon.py (no model, no cache needed except the last test)."""
 
 import itertools
 import sys

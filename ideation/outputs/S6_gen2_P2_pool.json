@@ -1,0 +1,220 @@
+{
+ "judgments": [
+  {
+   "a": "P2-C01",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "C03 cleaner; C01 targets CTA gap but E12 risk"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C06",
+   "winner": "a",
+   "reason": "C01 is the core estimation problem"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C06",
+   "winner": "tie",
+   "reason": "C06 distinctive guarantee; C03 cleaner and cheaper"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C01",
+   "winner": "b",
+   "reason": "C01 attacks the main competitor's assumption"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "G1a more efficient; C03 simpler baseline"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 has a distinctive guarantee claim"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C01",
+   "winner": "a",
+   "reason": "extends C01 with failure-aware direct side"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "bigger scope vs cleaner design"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C06",
+   "winner": "tie",
+   "reason": "core estimator vs guarantee"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C01",
+   "winner": "tie",
+   "reason": "gating cuts risk but adds a threshold"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "G1c more novel, C03 cleaner"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 more distinctive"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-G1b",
+   "winner": "b",
+   "reason": "G1b has larger impact"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-G1c",
+   "winner": "b",
+   "reason": "G1c is tied to anchor gap G15 and reduces cost"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-G1c",
+   "winner": "tie",
+   "reason": "G1c is a gated variant of G1b"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-G1b",
+   "winner": "b",
+   "reason": "G1b is the core estimator"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-C01",
+   "winner": "b",
+   "reason": "G2a depends on a benefit estimator (C01)"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-C06",
+   "winner": "a",
+   "reason": "G2a fixes C06's savings question with a paired test"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "guarantee plus savings vs clean cost-saving"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-G1c",
+   "winner": "a",
+   "reason": "more distinctive and falsifiable"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-G1a",
+   "winner": "a",
+   "reason": "guarantee claim is more distinctive"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-G1b",
+   "winner": "b",
+   "reason": "G2b is a narrow extension"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-C01",
+   "winner": "tie",
+   "reason": "narrow vs general"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 has distinctive guarantee"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-C03",
+   "winner": "b",
+   "reason": "C03 cleaner"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-G1c",
+   "winner": "tie",
+   "reason": "both scenario-dependent"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-G1a",
+   "winner": "tie",
+   "reason": "both narrow efficiency/signal tweaks"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-G1b",
+   "winner": "tie",
+   "reason": "G2c cheaper, G1b broader"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-C01",
+   "winner": "tie",
+   "reason": "G2c adds gating and failure-aware signal"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 more distinctive"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "more novel vs cleaner"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-G1c",
+   "winner": "a",
+   "reason": "adds the failure-aware signal G1c lacked"
+  },
+  {
+   "a": "P2-G2c",
+   "b": "P2-G1a",
+   "winner": "a",
+   "reason": "tied to anchor gap G15"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-G2b",
+   "winner": "a",
+   "reason": "broader and testable guarantee"
+  },
+  {
+   "a": "P2-G2a",
+   "b": "P2-G2c",
+   "winner": "a",
+   "reason": "more distinctive"
+  },
+  {
+   "a": "P2-G2b",
+   "b": "P2-G2c",
+   "winner": "b",
+   "reason": "G2c broader"
+  }
+ ]
+}

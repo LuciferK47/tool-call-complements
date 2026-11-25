@@ -1,0 +1,220 @@
+{
+ "judgments": [
+  {
+   "a": "P2-C01",
+   "b": "P2-C02",
+   "winner": "a",
+   "reason": "general; C02 helps mainly retrieval"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "C03 cleaner; C01 targets CTA gap but E12 risk"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "C01 attacks the main competitor's assumption"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C06",
+   "winner": "a",
+   "reason": "C01 is the core estimation problem"
+  },
+  {
+   "a": "P2-C01",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C07 is generic calibration"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C03",
+   "winner": "b",
+   "reason": "C03 black-box native with clear metric"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C05",
+   "winner": "tie",
+   "reason": "C05 has remedy; C02 narrow but novel"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 gives guarantee-style falsifiable claim"
+  },
+  {
+   "a": "P2-C02",
+   "b": "P2-C07",
+   "winner": "tie",
+   "reason": "C07 sounder; C02 more novel but narrow"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "C03 directly cuts signal cost (G5)"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C06",
+   "winner": "tie",
+   "reason": "C06 distinctive guarantee; C03 cleaner and cheaper"
+  },
+  {
+   "a": "P2-C03",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C03 more specific to tool calling"
+  },
+  {
+   "a": "P2-C05",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 more distinctive and testable"
+  },
+  {
+   "a": "P2-C05",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C05 tied to anchor gap G15 with a remedy"
+  },
+  {
+   "a": "P2-C06",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "C06 more novel and falsifiable"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C01",
+   "winner": "b",
+   "reason": "C01 attacks the main competitor's assumption"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "G1a more efficient; C03 simpler baseline"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 has a distinctive guarantee claim"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "G1a more specific"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C02",
+   "winner": "a",
+   "reason": "broader applicability"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "more specific to tool calls"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C01",
+   "winner": "a",
+   "reason": "extends C01 with failure-aware direct side"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "bigger scope vs cleaner design"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C06",
+   "winner": "tie",
+   "reason": "core estimator vs guarantee"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "G1b adds the benefit side to C05's remedy"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C02",
+   "winner": "a",
+   "reason": "broader and better grounded"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "less generic"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C01",
+   "winner": "tie",
+   "reason": "gating cuts risk but adds a threshold"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C03",
+   "winner": "tie",
+   "reason": "G1c more novel, C03 cleaner"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C06",
+   "winner": "b",
+   "reason": "C06 more distinctive"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C05",
+   "winner": "a",
+   "reason": "G1c is tied to the same anchor gap with a deployable remedy"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C02",
+   "winner": "a",
+   "reason": "better evidence for where benefit matters"
+  },
+  {
+   "a": "P2-G1c",
+   "b": "P2-C07",
+   "winner": "a",
+   "reason": "less generic"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-G1b",
+   "winner": "b",
+   "reason": "G1b has larger impact"
+  },
+  {
+   "a": "P2-G1a",
+   "b": "P2-G1c",
+   "winner": "b",
+   "reason": "G1c is tied to anchor gap G15 and reduces cost"
+  },
+  {
+   "a": "P2-G1b",
+   "b": "P2-G1c",
+   "winner": "tie",
+   "reason": "G1c is a gated variant of G1b"
+  }
+ ]
+}

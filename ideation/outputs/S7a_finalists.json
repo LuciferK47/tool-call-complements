@@ -1,0 +1,16 @@
+{"stage": "S7a", "description": "Finalist set = final generation-2 population (mu=6) after lineage merging and a diversity-restoring step.",
+ "deviation_from_hypoevolve": "HypoEvolve has no explicit diversity maintenance. We (1) merge an ancestor into its surviving descendant when both are in the population (they are versions of one idea), and (2) restore the best eliminated candidate from method families absent from the population. Both are human-rule choices fixed before the rubric scoring.",
+ "P1": {"final_population": ["P1-C01","P1-G1a","P1-G2b","P1-G1b","P1-C02","P1-G2a"],
+        "eliminated_gen2": ["P1-G2c","P1-G1c","P1-C03"],
+        "merges": [{"into": "P1-C01", "from": "P1-G2c", "what": "split-half reliability filter + permutation null adopted as part of C01's spec (G2c eliminated only by tie-break at the cutoff)"}],
+        "restored": [{"id": "P1-G1c", "family": "decision-focused learning (absent from population); G1c is the refined descendant of C03", "fitness_gen1": 51.54, "fitness_gen2": 45.4}],
+        "finalists": ["P1-C01","P1-G1a","P1-G2b","P1-G1b","P1-C02","P1-G2a","P1-G1c"]},
+ "P2": {"final_population": ["P2-G1b","P2-G2a","P2-C01","P2-C06","P2-C03","P2-G2c"],
+        "eliminated_gen2": ["P2-G1c","P2-G2b","P2-G1a"],
+        "merges": [{"into": "P2-G1b", "from": "P2-C01", "what": "C01 is G1b's ancestor (G1b = C01 + failure-aware direct side)"},
+                   {"into": "P2-G2a", "from": "P2-C06", "what": "C06 is G2a's ancestor (G2a = C06 with benefit-ranked score)"},
+                   {"into": "P2-C03", "from": "P2-G1a", "what": "G1a (informed prior) kept as an option inside C03's spec"}],
+        "restored": [{"id": "P2-G2b", "family": "tool-preview value-of-information (absent)", "fitness_gen2": 51.54},
+                     {"id": "P2-C07", "family": "calibration under distribution shift (absent; addresses G12)", "fitness_gen0": 20.0}],
+        "finalists": ["P2-G1b","P2-G2a","P2-C03","P2-G2c","P2-G2b","P2-C07"]}
+}

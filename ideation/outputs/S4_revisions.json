@@ -1,0 +1,53 @@
+{"stage": "S4", "role": "REVISER", "prompt": "pipeline/prompts/stage_prompts.md#S4", "population": "gen0 (mu=6 per problem, from S4a_gen0_selection.json)",
+ "revisions": {
+"P1-C12": {"v": 1, "changes": [
+  {"answers": "Expected answer (hidden states win) is unsurprising [SKEPTIC]", "change": "Hypothesis reframed to a quantity-of-information claim: hidden-state features add Delta-sign AUROC over token-probability features by >= 0.03 AND combined features are no better than hidden states alone (tests redundancy). Adds a 'step-type' stratification (first step vs later step) so a null at later steps is informative."},
+  {"answers": "Add combined features [EXPERIMENTAL_DESIGN]", "change": "Three arms: hidden-only, token-prob-only (FLARE/DRAGIN-style statistics), concatenation."}],
+ "rejected_criticisms": [], "hypothesis": "At matched labels and data, hidden-state features exceed token-probability features in per-step Delta-sign AUROC by >= 0.03, and concatenation adds < 0.01 over hidden-only."},
+"P1-C01": {"v": 1, "changes": [
+  {"answers": "Winner's curse in hindsight oracle [METHODOLOGY]", "change": "Oracle policies are chosen on branch-set A (K=3 samples) and EVALUATED on independent branch-set B (K=3 fresh samples); the headroom is the B-evaluated gap."},
+  {"answers": "Single-decision oracle strawman [EXPERIMENTAL_DESIGN]", "change": "Single-decision oracle = best of {never, always, per-instance best fixed pattern over steps} chosen with hindsight on A; report all three."},
+  {"answers": "Headroom may be ~0 on When2Tool envs [SKEPTIC]", "change": "Add HotpotQA-subset with BM25 where intermediate answers change need; pre-register the 2.0 U-AUC threshold and the stop rule."}],
+ "rejected_criticisms": [], "hypothesis": "On at least one benchmark, the step-wise oracle's U-AUC (evaluated on held-out continuations) exceeds the single-decision oracle's by >= 2.0 points with a paired-bootstrap 95% CI excluding 0."},
+"P1-C03": {"v": 1, "changes": [
+  {"answers": "Noisy Delta labels make sign ill-defined [METHODOLOGY]", "change": "Soft targets from K-sample means; examples with |Delta - lambda*c| below a margin band get weight 0."},
+  {"answers": "Needs matched comparison [EXPERIMENTAL_DESIGN]", "change": "Fix feature dimension, optimiser, steps; compare with two-head subtraction and a direct Delta-regression head."},
+  {"answers": "Gains may vanish under noisy labels [SKEPTIC]", "change": "Add label-noise sweep (flip rate 0, 10, 20%)."}],
+ "rejected_criticisms": ["'Transfer not new' [NOVELTY]: accepted as a framing constraint, no method change."], "hypothesis": "With matched features and data, a regret-weighted cost-conditioned scorer has lower mean per-step decision regret than two-head subtraction, and the gap grows with label noise."},
+"P1-C02": {"v": 1, "changes": [
+  {"answers": "Variance of subtracting two heads [METHODOLOGY]", "change": "Add a direct-Delta regression head and a shared-trunk variant as ablations; L2-regularised logistic heads."},
+  {"answers": "Need-probe baseline must use identical data [EXPERIMENTAL_DESIGN]", "change": "Need-probe baseline trained on the same branched tasks; add oracle-feature upper bound."},
+  {"answers": "E12: utility estimation weak [SKEPTIC]", "change": "Stop rule: if Delta-sign AUROC per step is not above the need-probe's on validation, P1 reports a negative result."}],
+ "rejected_criticisms": [], "hypothesis": "Under matched backbone, features, and branched training data, the two-head marginal-utility probe attains higher U-AUC than a step-wise need probe on at least one benchmark."},
+"P1-C09": {"v": 1, "changes": [
+  {"answers": "Subsumed by C01/C02 [NOVELTY/SKEPTIC]", "change": "Reframed from a stand-alone idea into the *label-noise and label-definition* study that tests whether final-outcome counterfactual labels are needed; kept only the hop-local vs final-outcome contrast on envs with per-hop gold answers."},
+  {"answers": "Per-hop gold answers exist only in some envs [EXPERIMENTAL_DESIGN]", "change": "Restricted to When2Tool chained envs."}],
+ "rejected_criticisms": [], "hypothesis": "On chains with error propagation, probes trained on final-outcome counterfactual labels achieve higher U-AUC than probes trained on hop-local correctness labels."},
+"P1-C10": {"v": 1, "changes": [
+  {"answers": "Trivially true for calibrated scores [SKEPTIC]", "change": "Hypothesis made falsifiable and non-trivial: a single lambda-conditioned rule trained on lambda in [0.1,0.4] stays within the CI of per-lambda trained probes on [0.5,0.8] ONLY IF the score is calibrated; test both a calibrated and an uncalibrated score so the experiment can fail."},
+  {"answers": "Report calibration [METHODOLOGY]", "change": "Report ECE of the utility score alongside U."}],
+ "rejected_criticisms": [], "hypothesis": "Out-of-range, a lambda-conditioned rule with isotonic-calibrated scores stays within the 95% CI of per-lambda probes, whereas an uncalibrated score falls below it."},
+"P2-C03": {"v": 1, "changes": [
+  {"answers": "SPRT needs a likelihood model [METHODOLOGY]", "change": "Beta-Binomial posterior over p_correct from agreement among m samples; stop when posterior mass above/below the decision boundary reaches 0.9."},
+  {"answers": "Savings may be small if queries are ambiguous [SKEPTIC]", "change": "Report distribution of samples used per query and the share of queries that never stop before the cap."}],
+ "rejected_criticisms": [], "hypothesis": "At matched lambda, adaptive-sample stopping attains U within 1 point of fixed k=10 using fewer than 4 samples per query on average."},
+"P2-C06": {"v": 1, "changes": [
+  {"answers": "Coverage vs bounded-loss formulation [METHODOLOGY]", "change": "Use a Learn-then-Test style procedure on the accuracy-loss risk (loss = 1[always-call correct and skip wrong]); single-decision queries are exchangeable."},
+  {"answers": "Guarantee may force always-call [SKEPTIC]", "change": "Report calls saved at epsilon in {1,2,5}% and the epsilon at which savings vanish."}],
+ "rejected_criticisms": [], "hypothesis": "Across 20 random calibration/test splits, the calibrated skip rule keeps accuracy loss <= epsilon in >= (1 - delta) of splits while saving a positive fraction of calls at epsilon = 5%."},
+"P2-C05": {"v": 1, "changes": [
+  {"answers": "Diagnostic only; reviewer would ask for a fix [SKEPTIC]", "change": "Add a hybrid estimator (consistency x small labelled calibration) as the proposed remedy and test it."}],
+ "rejected_criticisms": [], "hypothesis": "Consistency-based estimates fail disproportionately on confidently-wrong queries (consistency >= 0.8 but wrong), and a hybrid estimator closes at least half of the utility gap to absolute estimation."},
+"P2-C07": {"v": 1, "changes": [
+  {"answers": "General calibration dressed as tool-calling [SKEPTIC]", "change": "Evaluate on U of the call decision, not ECE alone; the claim is about decision utility under shift."}],
+ "rejected_criticisms": [], "hypothesis": "With 50 labelled target examples, recalibration recovers at least 70% of the U lost under source-to-target shift relative to the uncalibrated source map."},
+"P2-C01": {"v": 1, "changes": [
+  {"answers": "Dataset artefacts (entity popularity) [METHODOLOGY]", "change": "Group-split train/validation by topic/entity cluster."},
+  {"answers": "Charge sampling cost [EXPERIMENTAL_DESIGN]", "change": "Report U with and without signal-collection cost."},
+  {"answers": "E12 caution [SKEPTIC]", "change": "Add the global-constant p_tool baseline explicitly (CTA's rule) so a null is visible."}],
+ "rejected_criticisms": [], "hypothesis": "Replacing a global p_tool with a per-query estimate raises U-AUC over CTA's global-p_ret rule on at least 2 of 3 scenarios, net of signal cost."},
+"P2-C02": {"v": 1, "changes": [
+  {"answers": "No single method across tools [METHODOLOGY]", "change": "Define interface preview(x) -> feature vector: retrieval top-k score statistics; expression size/parse depth for the calculator; problem-type classifier output for the reasoner."},
+  {"answers": "Oracle preview upper bound [EXPERIMENTAL_DESIGN]", "change": "Add oracle-preview arm and net-of-cost reporting."}],
+ "rejected_criticisms": [], "hypothesis": "On the retrieval scenario, preview features raise p_tool AUROC by >= 0.05 over query-only features and the net U after preview cost is higher than without preview."}
+}}

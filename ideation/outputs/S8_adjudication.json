@@ -1,0 +1,18 @@
+{"stage": "S8", "role": "TEAM ADJUDICATION (written reasons; LLM scores are not objective measurements)",
+ "policy_fixed_before_scoring": "Final order = all-judge weighted rubric score; pairwise Bradley-Terry ranking is a cross-check; overrides only where an idea is flagged (skeptic novelty<=1, feasibility<=2, near-duplicate) and each override needs a written reason.",
+ "cross_check": {"P1": {"kendall_tau": 0.1, "reading": "Rankings disagree. Pairwise judges rewarded novelty and sharpness of the falsifier and penalised dependent ideas; the rubric weights feasibility (25%) and clarity. P1-C01 and P1-G1a rank high pairwise but G1a is flagged for feasibility and C02 depends on C01's labels."},
+                 "P2": {"kendall_tau": 0.286, "reading": "Weak agreement. P2-C07 is last pairwise (low novelty) but 4th by rubric (feasibility, testability, clarity)."}},
+ "stability": {"P1": "Top-5 set identical under equal, feasibility-heavy and novelty-heavy weights; only order changes (P1-G2b ranks first under novelty-heavy). Dirichlet top-5 probability: C02/C01/G2a/G2b = 1.0, G1b = 0.988, G1a = 0.012, G1c = 0.001.",
+               "P2": "Fifth slot is unstable: only 6 finalists exist, so top-5 membership of C07 (0.995), G2c (0.662) and G2b (0.343) reflects pool size, not strong preference."},
+ "decisions": [
+  {"problem": "P1", "decision": "Accept rubric top-5: C02, C01, G2a, G2b, G1b. P1-G1a (rank 6) kept as a named alternate and as a label-source option inside the first idea; no override.", "reason": "Policy applied unchanged."},
+  {"problem": "P1", "decision": "Implementation ORDER differs from rank: build P1-C01 first, then P1-C02.", "reason": "C02 trains on the counterfactual labels and is only meaningful if C01's headroom gate passes (a dependency, not a re-ranking)."},
+  {"problem": "P2", "decision": "Override: replace P2-G2c (rubric rank 5) with P2-G2b (rank 6).", "reason": "G2c is flagged low-distinctiveness (a gated variant of G1b); the task forbids five variants of one technique. G2b is a distinct mechanism (tool-preview signal)."},
+  {"problem": "P2", "decision": "Keep P2-C07 despite skeptic novelty = 1; label it 'low novelty, high feasibility'.", "reason": "Needed to reach five ideas from a small distinct pool; it addresses author-stated-adjacent gap G12 and is the cheapest to test. The report states that P2 ideas 4-5 are weaker than ideas 1-3."},
+  {"problem": "P1+P2", "decision": "Report P1 as primary, P2 as fallback.", "reason": "P1 carries the higher potential contribution but depends on the headroom gate; P2 does not depend on model internals and can proceed regardless."}
+ ],
+ "final": {"P1": ["P1-C02", "P1-C01", "P1-G2a", "P1-G2b", "P1-G1b"], "P2": ["P2-C03", "P2-G2a", "P2-G1b", "P2-C07", "P2-G2b"]},
+ "named": {"best_overall": "P1-C02 by rubric (3.98); caveat: depends on C01 and carries E12 counter-evidence",
+           "best_low_resource": "P2-C03 (needs only a sampling API, no training; rubric 4.10, highest of all)",
+           "most_ambitious": "P1-G2b look-ahead probing (rank 1 under novelty-heavy weights); P1-G1a is the more ambitious but feasibility-flagged alternate",
+           "recommended_next_stage": "P1: C01 -> C02 on When2Tool chained environments with Qwen3-4B, with G2a as the evaluation harness; fall back to P2-C03 + P2-G1b if the headroom gate fails"}}

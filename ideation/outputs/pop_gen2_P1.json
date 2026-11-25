@@ -1,0 +1,25 @@
+{
+ "mu": 6,
+ "retained": [
+  "P1-C01",
+  "P1-G1a",
+  "P1-G2b",
+  "P1-G1b",
+  "P1-C02",
+  "P1-G2a"
+ ],
+ "eliminated": [
+  "P1-G2c",
+  "P1-G1c",
+  "P1-C03"
+ ],
+ "fitness": {
+  "P1-C01": 105.56,
+  "P1-G1a": 93.87,
+  "P1-G2b": 89.06,
+  "P1-G1b": 72.45,
+  "P1-C02": 68.49,
+  "P1-G2a": 68.49
+ },
+ "tie_break": "previous-generation fitness, then id"
+}

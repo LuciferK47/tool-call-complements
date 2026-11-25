@@ -1,0 +1,36 @@
+{
+ "seed": 20261019,
+ "pc": 0.6,
+ "pm": 0.15,
+ "plan": [
+  {
+   "offspring_slot": 1,
+   "parents": [
+    "P1-C01",
+    "P1-C02"
+   ],
+   "operators": [
+    "CROSSOVER-INSPIRATION"
+   ]
+  },
+  {
+   "offspring_slot": 2,
+   "parents": [
+    "P1-C01",
+    "P1-C12"
+   ],
+   "operators": [
+    "CROSSOVER-INSPIRATION"
+   ]
+  },
+  {
+   "offspring_slot": 3,
+   "parents": [
+    "P1-C03"
+   ],
+   "operators": [
+    "MUTATION-TARGETED"
+   ]
+  }
+ ]
+}

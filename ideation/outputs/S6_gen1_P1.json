@@ -1,0 +1,135 @@
+{
+ "stage": "S6",
+ "generation": 1,
+ "problem": "P1",
+ "note": "new pairs only (offspring vs parents, offspring vs offspring); parent-parent judgments reused from S6_gen0 (deviation from HypoEvolve, which re-scores all pairs)",
+ "judgments": [
+  {
+   "a": "P1-G1a",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 is the gate; G1a's comparison arm depends on its labels"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "G1a has eps=0 control and equal-budget design; higher novelty"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "label cost is a bigger practical barrier than loss shape"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "G1a subsumes the label-source question with a falsifier"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "non-trivial and novel"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C12",
+   "winner": "a",
+   "reason": "more novel, more practical impact"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "G1b depends on C01 labels; C01 more fundamental"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C02",
+   "winner": "tie",
+   "reason": "G1b explains where headroom lives; C02 is core mechanism"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "specific flip-rate threshold, new target variable"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "clearer target and falsifier"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "less trivial"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C12",
+   "winner": "a",
+   "reason": "extends C12 with a decision-relevant target"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 decides whether P1 exists"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C02",
+   "winner": "b",
+   "reason": "C02 is the core mechanism G1c refines"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "G1c fixes C03's stated noise weakness"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C09",
+   "winner": "a",
+   "reason": "clearer mechanism"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C10",
+   "winner": "a",
+   "reason": "non-trivial noise falsifier"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C12",
+   "winner": "tie",
+   "reason": "C12 cleaner; G1c more novel, ensemble cost"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-G1b",
+   "winner": "a",
+   "reason": "G1a addresses the main feasibility barrier"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "label cost matters more than decision-rule polish"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "G1b is more informative about headroom"
+  }
+ ],
+ "n_total_in_pool": 36
+}

@@ -1,0 +1,136 @@
+{
+ "stage": "S6",
+ "generation": 2,
+ "problem": "P1",
+ "note": "new pairs only; retained-retained pairs reused from the gen1 pool",
+ "judgments": [
+  {
+   "a": "P1-G2a",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 decides whether P1 exists"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1a",
+   "winner": "b",
+   "reason": "G1a is a novel method; G2a is a protocol"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "protocol rank-reversal test vs flip analysis; both falsifiable"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-C02",
+   "winner": "tie",
+   "reason": "C02 core mechanism with E12 risk; G2a robustly feasible"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "protocol supports all ideas; G1c is a rule refinement"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "more broadly useful, clearer falsifier"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 is the gate"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1a",
+   "winner": "tie",
+   "reason": "look-ahead novel but costly; G1a more practical"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "both informative about when signal appears"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "extends C02 with a break-even test"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "more novel"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "more novel"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C01",
+   "winner": "tie",
+   "reason": "G2c adds rigour to C01 without changing its claim"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1a",
+   "winner": "b",
+   "reason": "G1a addresses feasibility barrier"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "G2c contains G1b"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C02",
+   "winner": "b",
+   "reason": "C02 is the core mechanism"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "headroom rigour matters more than decision-rule polish"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "clearer falsifier"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G2b",
+   "winner": "b",
+   "reason": "G2b is more novel"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G2c",
+   "winner": "tie",
+   "reason": "different roles"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G2c",
+   "winner": "a",
+   "reason": "G2b more novel"
+  }
+ ],
+ "n_reused": 15,
+ "n_total_in_pool": 36
+}

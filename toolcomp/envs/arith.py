@@ -1,6 +1,6 @@
 """E1: chained arithmetic (3 steps), deterministic instance generator and exact reference computation.
 
-Design (see docs/01 A-05, A-30..A-33):
+Design:
   * every instance has exactly T=3 steps: v1 = a op1 b1, v2 = v1 op2 b2, v3 = v2 op3 b3;
   * each step draws its own difficulty bin, so difficulty varies *within* a trajectory;
   * the full problem text is shown at every decision point (information at step t is a superset of

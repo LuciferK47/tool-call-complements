@@ -1,4 +1,4 @@
-"""Training-size x head ablation on partition 0 (docs/01 A-48; pre-registration addendum 2). EXPLORATORY.
+"""Training-size x head ablation on partition 0. EXPLORATORY.
 
 Frozen evaluation: cal, gate and test are exactly partition 0's splits of the main pool. Training subsets are NESTED and identical for every
 head: n=|train| (the original train split), then train + the first m extra-pool instances (fixed seeded order). Every variant is refitted on each

@@ -1,0 +1,97 @@
+{
+ "P1": {
+  "kendall_tau_rubric_vs_pairwise": 0.1,
+  "top5_probability_dirichlet": {
+   "P1-C01": 1.0,
+   "P1-G1a": 0.012,
+   "P1-G2b": 1.0,
+   "P1-G1b": 0.988,
+   "P1-C02": 1.0,
+   "P1-G2a": 1.0,
+   "P1-G1c": 0.001
+  },
+  "mean_rank_dirichlet": {
+   "P1-C01": 2.45,
+   "P1-G1a": 6.14,
+   "P1-G2b": 3.5,
+   "P1-G1b": 5.01,
+   "P1-C02": 1.13,
+   "P1-G2a": 2.93,
+   "P1-G1c": 6.85
+  },
+  "alternative_weight_rankings": {
+   "equal": [
+    "P1-C01",
+    "P1-G2b",
+    "P1-C02",
+    "P1-G2a",
+    "P1-G1b",
+    "P1-G1a",
+    "P1-G1c"
+   ],
+   "feasibility_heavy": [
+    "P1-C02",
+    "P1-G2a",
+    "P1-C01",
+    "P1-G2b",
+    "P1-G1b",
+    "P1-G1c",
+    "P1-G1a"
+   ],
+   "novelty_heavy": [
+    "P1-G2b",
+    "P1-C02",
+    "P1-C01",
+    "P1-G2a",
+    "P1-G1b",
+    "P1-G1a",
+    "P1-G1c"
+   ]
+  }
+ },
+ "P2": {
+  "kendall_tau_rubric_vs_pairwise": 0.286,
+  "top5_probability_dirichlet": {
+   "P2-G1b": 1.0,
+   "P2-G2a": 1.0,
+   "P2-C03": 1.0,
+   "P2-G2c": 0.662,
+   "P2-G2b": 0.343,
+   "P2-C07": 0.995
+  },
+  "mean_rank_dirichlet": {
+   "P2-G1b": 2.96,
+   "P2-G2a": 2.24,
+   "P2-C03": 1.04,
+   "P2-G2c": 5.33,
+   "P2-G2b": 5.64,
+   "P2-C07": 3.8
+  },
+  "alternative_weight_rankings": {
+   "equal": [
+    "P2-C03",
+    "P2-G2a",
+    "P2-C07",
+    "P2-G1b",
+    "P2-G2b",
+    "P2-G2c"
+   ],
+   "feasibility_heavy": [
+    "P2-C03",
+    "P2-C07",
+    "P2-G2a",
+    "P2-G1b",
+    "P2-G2c",
+    "P2-G2b"
+   ],
+   "novelty_heavy": [
+    "P2-C03",
+    "P2-G2a",
+    "P2-G1b",
+    "P2-G2b",
+    "P2-C07",
+    "P2-G2c"
+   ]
+  }
+ }
+}

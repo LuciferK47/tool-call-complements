@@ -1,6 +1,6 @@
-"""Composite-horizon experiment on exact outcome trees: same signal, different decision rule (docs/09 predictions).
+"""Composite-horizon experiment on exact outcome trees: same signal, different decision rule.
 
-  python scripts/run_oring.py --tree <path/to/*_tree.npz> --config configs/q35_0p8b.yaml --results <results.json> --out results/oring_q35_0p8b.json
+  python scripts/run_horizon.py --tree <path/to/*_tree.npz> --config configs/q35_0p8b.yaml --results <results.json> --out results/horizon_q35_0p8b.json
 """
 
 import argparse
@@ -54,7 +54,7 @@ def main():
         for base in (0, 7 - i - j):
             d = lc[:, base | i | j] - lc[:, base | i] - lc[:, base | j] + lc[:, base]
             pos, neg = pos + int((d > 0).sum()), neg + int((d < 0).sum())
-    res = {"label": "EXPLORATORY; seen pools; predictions in docs/09 written first", "model": cfg["model"]["id"], "dataset_hash": dataset_hash(ins),
+    res = {"label": "EXPLORATORY; seen pools; predictions in configs/predictions.yaml", "model": cfg["model"]["id"], "dataset_hash": dataset_hash(ins),
            "lambdas": list(LAMBDAS), "ms": list(MS), "bootstrap": args.boot, "reps": args.reps,
            "second_differences": {"complements": pos, "substitutes": neg, "total_pairs": 6 * tree.n},
            "pattern_accuracy": lc.mean(0).tolist()}

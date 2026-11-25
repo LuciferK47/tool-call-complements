@@ -1,0 +1,220 @@
+{
+ "judgments": [
+  {
+   "a": "P1-C01",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "pre-registered falsifiable gate; C02 carries E12 counter-evidence"
+  },
+  {
+   "a": "P1-C01",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "measurement precedes estimator; sharper hypothesis"
+  },
+  {
+   "a": "P1-C02",
+   "b": "P1-C03",
+   "winner": "tie",
+   "reason": "C03 answers E12 noise; C02 is the core mechanism"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 is the gate; G1a's comparison arm depends on its labels"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "G1a has eps=0 control and equal-budget design; higher novelty"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "label cost is a bigger practical barrier than loss shape"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "G1b depends on C01 labels; C01 more fundamental"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C02",
+   "winner": "tie",
+   "reason": "G1b explains where headroom lives; C02 is core mechanism"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "specific flip-rate threshold, new target variable"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 decides whether P1 exists"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C02",
+   "winner": "b",
+   "reason": "C02 is the core mechanism G1c refines"
+  },
+  {
+   "a": "P1-G1c",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "G1c fixes C03's stated noise weakness"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-G1b",
+   "winner": "a",
+   "reason": "G1a addresses the main feasibility barrier"
+  },
+  {
+   "a": "P1-G1a",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "label cost matters more than decision-rule polish"
+  },
+  {
+   "a": "P1-G1b",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "G1b is more informative about headroom"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 decides whether P1 exists"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1a",
+   "winner": "b",
+   "reason": "G1a is a novel method; G2a is a protocol"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "protocol rank-reversal test vs flip analysis; both falsifiable"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-C02",
+   "winner": "tie",
+   "reason": "C02 core mechanism with E12 risk; G2a robustly feasible"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "protocol supports all ideas; G1c is a rule refinement"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "more broadly useful, clearer falsifier"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C01",
+   "winner": "b",
+   "reason": "C01 is the gate"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1a",
+   "winner": "tie",
+   "reason": "look-ahead novel but costly; G1a more practical"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "both informative about when signal appears"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C02",
+   "winner": "a",
+   "reason": "extends C02 with a break-even test"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "more novel"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "more novel"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C01",
+   "winner": "tie",
+   "reason": "G2c adds rigour to C01 without changing its claim"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1a",
+   "winner": "b",
+   "reason": "G1a addresses feasibility barrier"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1b",
+   "winner": "tie",
+   "reason": "G2c contains G1b"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C02",
+   "winner": "b",
+   "reason": "C02 is the core mechanism"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-G1c",
+   "winner": "a",
+   "reason": "headroom rigour matters more than decision-rule polish"
+  },
+  {
+   "a": "P1-G2c",
+   "b": "P1-C03",
+   "winner": "a",
+   "reason": "clearer falsifier"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G2b",
+   "winner": "b",
+   "reason": "G2b is more novel"
+  },
+  {
+   "a": "P1-G2a",
+   "b": "P1-G2c",
+   "winner": "tie",
+   "reason": "different roles"
+  },
+  {
+   "a": "P1-G2b",
+   "b": "P1-G2c",
+   "winner": "a",
+   "reason": "G2b more novel"
+  }
+ ]
+}

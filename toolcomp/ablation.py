@@ -1,4 +1,4 @@
-"""Matched head / training-size ablation (docs/01 A-48). Exploratory.
+"""Matched head / training-size ablation. Exploratory.
 
 Heads (all estimate the marginal utility Delta = y_call - y_no under the always-call continuation and call iff estimate > lambda):
   H1 two-head logistic (the MUP of the main run, scipy)        H2 3-class Delta head (softmax over {-1,0,+1}, E[Delta])

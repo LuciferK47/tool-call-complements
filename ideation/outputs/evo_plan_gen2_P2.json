@@ -1,0 +1,37 @@
+{
+ "seed": 20261022,
+ "pc": 0.6,
+ "pm": 0.15,
+ "plan": [
+  {
+   "offspring_slot": 1,
+   "parents": [
+    "P2-C06"
+   ],
+   "operators": [
+    "MUTATION-TARGETED"
+   ]
+  },
+  {
+   "offspring_slot": 2,
+   "parents": [
+    "P2-C01",
+    "P2-G1b"
+   ],
+   "operators": [
+    "CROSSOVER-COMBINATION",
+    "MUTATION-TARGETED"
+   ]
+  },
+  {
+   "offspring_slot": 3,
+   "parents": [
+    "P2-G1c",
+    "P2-G1b"
+   ],
+   "operators": [
+    "CROSSOVER-COMBINATION"
+   ]
+  }
+ ]
+}
