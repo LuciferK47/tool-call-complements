@@ -1,6 +1,6 @@
 # Tool calls are complements
 
-Code for the paper *Tool Calls Are Complements: Why Per-Step Call Rules Fail on Multi-Step Tasks* (Shah, Singh, Rana, Gadkari).
+Code for the paper *Tool Calls Are Complements: Why Per-Step Call Rules Fail on Multi-Step Tasks* (Singh, Rana, Shah, Gadkari).
 
 A model decides at each step of a multi-step task whether to pay for an exact tool call. The task pays only if every step is right, so calls are
 complements. The repository contains the evaluation pipeline (exhaustive outcome trees from real generations), the probes and baselines of the

@@ -24,17 +24,7 @@ ORDER = ["primary_0p5b", "gpu_0p5b_seed20261201", "q35_0p8b", "q35_0p8b_seed2026
          "q35_2b_seed20261201", "q35_4b_seed20261201", "q35_9b_seed20261201"]                                                              # every 3-step run
 SIX = ["arith6_gpu_0p5b", "arith6_q35_0p8b", "arith6_q35_2b", "arith6_q35_4b", "arith6_q35_9b"]                                            # 6-step chains, committed prices
 SIXM = [t + "_matched" for t in SIX]                                                                                                       # the same at half the per-call price
-MODEL_NAME = {"0p5b": "0.5B", "0p8b": "0.8B", "2b": "2B", "4b": "4B", "9b": "9B"}
-MODEL_COL = {"0p5b": "#a23b2a", "0p8b": "#d98324", "2b": "#2a78d6", "4b": "#1baf7a", "9b": "#4a3aa7"}
 ROW = {"gpu_0p5b_seed20261201": "0.5B", "q35_0p8b_seed20261201": "0.8B", "q35_2b_seed20261201": "2B", "q35_4b_seed20261201": "4B", "q35_9b_seed20261201": "9B"}
-
-
-def model_of(t):
-    return next(k for k in MODEL_NAME if k in t)
-
-
-def marker_of(t):
-    return "^" if t.startswith("arith6_") else ("s" if "seed20261201" in t else "o")
 
 
 M = {}
@@ -279,61 +269,47 @@ def main():
             macro(f"LE{k}Cross", str(cross) if cross else "none")
             macro(f"LE{k}Few", f1(cur[str(ns[min(range(len(ns)), key=lambda i: abs(ns[i] - 4))])]["mean"]))
 
-    # ------------------------------------------------------------ figure 1
+    # ------------------------------------------------------------ figure 1 (drawn at the printed size, so font sizes are the printed ones)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    plt.rcParams.update({"font.family": "serif", "font.size": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.6,
-                         "axes.edgecolor": "#8a8984", "xtick.color": "#52514e", "ytick.color": "#52514e"})
-    fig, axs = plt.subplots(1, 3, figsize=(7.0, 1.72), gridspec_kw={"width_ratios": [1, 1.15, 1]})
+    plt.rcParams.update({"font.family": "serif", "font.serif": ["Nimbus Roman", "Times New Roman", "STIXGeneral", "DejaVu Serif"], "mathtext.fontset": "stix",
+                         "font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.7,
+                         "axes.edgecolor": "#6b6a66", "xtick.color": "#2f2e2b", "ytick.color": "#2f2e2b"})
+    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.3))
     # (a) utility versus total price for a homogeneous chain
     ax = axs[0]
     T, p = 12, 0.9
-    Cs = np.linspace(0.02, 2.0, 200)
-    for rule, st, lab, col in (("optimal_open_loop", "-", "optimal", "#2a78d6"), ("optimistic", "--", "optimistic", "#eb6834"), ("pessimistic", ":", "pessimistic", "#4a3aa7")):
-        ax.plot(Cs, [rule_expected_utility(rule, [p], T, c / T) for c in Cs], st, color=col, lw=1.5, label=lab)
-    ax.set_xlabel("total price of calling every step, $Tc$")
+    Cs = np.linspace(0.02, 2.0, 400)
+    for rule, st, lab, col, lw in (("optimal_open_loop", "-", "optimal", "#2a78d6", 3.0), ("optimistic", "--", "optimistic", "#eb6834", 1.8), ("pessimistic", ":", "pessimistic", "#1a1a19", 1.8)):
+        ax.plot(Cs, [rule_expected_utility(rule, [p], T, c / T) for c in Cs], st, color=col, lw=lw, label=lab)
+    ax.set_xlabel("total price $Tc$")
     ax.set_ylabel("expected utility")
-    ax.set_title(f"(a) chain with $T$={T}, $p$={p}", fontsize=7.5)
-    ax.legend(frameon=False, fontsize=6.5, loc="upper right")
-    # (b) predicted against measured regret of the best per-step rule
-    from matplotlib.lines import Line2D
-    ax = axs[1]
-    for t in R:
-        cs = C[t]
-        ax.scatter([c["predicted_best_per_step"] for c in cs], [c["best_per_step_regret"] for c in cs], s=8, marker=marker_of(t), facecolors="none", edgecolors="#9a9994", lw=0.4, zorder=2)
-        ax.scatter([c["signal_aware"] for c in cs], [c["best_per_step_regret"] for c in cs], s=7, marker=marker_of(t), color=MODEL_COL[model_of(t)], lw=0, zorder=3)
-    ax.plot([0, 19], [0, 19], color="#0b0b0b", lw=0.6)
-    for yc in (4.0, 17.0):
-        ax.axhline(yc, color="#b9b8b2", lw=0.5, ls=":", zorder=1)
-    ax.set_xlim(-0.5, 19)
-    ax.set_ylim(-0.5, 19.5)
-    ax.set_xlabel("predicted regret (pts)")
-    ax.set_ylabel("measured regret (pts)")
-    ax.set_title("(b) signal-aware (filled), closed form (open)", fontsize=7)
-    hs = [Line2D([], [], marker="o", ls="", ms=3, color=MODEL_COL[k], label=MODEL_NAME[k]) for k in MODEL_NAME]
-    hs += [Line2D([], [], marker=m_, ls="", ms=3, mfc="#6b6a66", mec="none", label=l_) for m_, l_ in (("o", "3-step"), ("s", "fresh"), ("^", "6-step"))]
-    ax.legend(handles=hs, frameon=False, fontsize=5.0, ncol=2, loc="upper left", handletextpad=0.1, columnspacing=0.6, labelspacing=0.15, borderaxespad=0.1)
-    # (c) label efficiency
-    ax = axs[2]
-    sty = {"q35_2b_S0_m4": ("#2a78d6", "2B, $T$=12"), "q35_0p8b_S0S4_m8": ("#d98324", "0.8B + conf., $T$=24"), "q35_0p8b_seed20261120_S0_m8": ("#e3b341", "0.8B fresh, $T$=24")}
-    for stem, (col, lab) in sty.items():
-        if stem not in le:
-            continue
-        d = le[stem]
-        ns = sorted(int(n) for n in d["curve"])
-        ax.errorbar(ns, [d["curve"][str(n)]["mean"] - d["belief_dp"] for n in ns], yerr=[d["curve"][str(n)]["sd"] for n in ns], color=col, marker="o", ms=2.5, lw=1.1, elinewidth=0.5, label=lab)
-    ax.axhline(0, color="#0b0b0b", lw=0.8)
-    ax.set_ylim(-50, 7)
-    ax.text(1.05, 1.6, "Belief-DP (0 labels)", fontsize=6, va="bottom")
-    ax.set_xscale("log")
-    ax.set_xlabel("labelled long tasks used")
-    ax.set_ylabel("re-tuned $-$ Belief-DP (pts)")
-    ax.set_title("(c) label efficiency", fontsize=7.5)
-    ax.legend(frameon=False, fontsize=5.8, loc="lower right")
-    fig.subplots_adjust(left=0.095, right=0.995, bottom=0.235, top=0.875, wspace=0.45)
+    ax.set_title(f"(a) chain, $T$={T}, $p$={p}", fontsize=9)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper right", handlelength=1.8, borderaxespad=0.1)
+    # (b), (c) measured regret of the best per-step rule against the two predictions, split by signal type
+    for ax, key, title in ((axs[1], "predicted_best_per_step", "(b) closed form"), (axs[2], "signal_aware", "(c) signal-aware")):
+        text = []
+        for informative, col, mk, lab in ((False, "#2a78d6", "o", "surface"), (True, "#eb6834", "^", "informative")):
+            cs = [c for c in allc if (c["sig"] != "S0") == informative]
+            xv, yv = [c[key] for c in cs], [c["best_per_step_regret"] for c in cs]
+            ax.scatter(xv, yv, s=13, marker=mk, color=col, alpha=0.6, lw=0, label=lab, zorder=3 if not informative else 2)
+            text.append((f"$r$={pearsonr(xv, yv)[0]:.2f}", col))
+        ax.plot([0, 19], [0, 19], color="#1a1a19", lw=0.8, zorder=1)
+        ax.set_xlim(-0.7, 19.5)
+        ax.set_ylim(-0.7, 19.5)
+        ax.set_xticks([0, 5, 10, 15])
+        ax.set_yticks([0, 5, 10, 15])
+        ax.set_aspect("equal", adjustable="box")
+        ax.set_xlabel("predicted regret (points)")
+        ax.set_title(title, fontsize=9)
+        for k, (t_, col) in enumerate(text):
+            ax.text(0.03, 0.97 - 0.11 * k, t_, transform=ax.transAxes, color=col, fontsize=9, va="top", fontweight="bold")
+    axs[1].set_ylabel("measured regret (points)")
+    axs[2].legend(frameon=False, fontsize=8, loc="lower right", handletextpad=0.1, borderaxespad=0.0, markerscale=1.3)
+    fig.subplots_adjust(left=0.085, right=0.995, bottom=0.19, top=0.9, wspace=0.34)
     fig.savefig(out / "figures" / "fig1.pdf")
-    fig.savefig(out / "figures" / "fig1.png", dpi=170)
+    fig.savefig(out / "figures" / "fig1.png", dpi=250)
     (out / "gen_macros.tex").write_text("\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in M.items()) + "\n")
     print(f"{len(M)} macros, {len(R)} runs (+ extra: {extra}), {len(allc)} cells -> {out}")
 
