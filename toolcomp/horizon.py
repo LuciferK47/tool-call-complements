@@ -146,22 +146,25 @@ def level_samples(P: np.ndarray, n_q: int = 60) -> List[np.ndarray]:
     return out
 
 
-def belief_dp(samples: List[np.ndarray], T: int, price: float) -> np.ndarray:
-    """W[j, g] on GRID for j = 0..T. samples[l] is the law of p at within-segment level l."""
+def belief_dp(samples: List[np.ndarray], T: int, price: float, q: Sequence[float] = None) -> np.ndarray:
+    """W[j, g] on GRID for j = 0..T. samples[l] is the law of p at within-segment level l.
+    q (optional): probability that a called step is right given a correct prefix, per within-segment level (noisy tool); a call then multiplies the belief by q
+    instead of leaving it unchanged. q = None is the exact tool of the main text."""
     W = np.zeros((T + 1, len(GRID)))
     W[T] = GRID
     for j in range(T - 1, -1, -1):
         p = samples[j % len(samples)]
         nxt = W[j + 1]
-        call = nxt - price
+        call = nxt - price if q is None else np.interp(GRID * q[j % len(q)], GRID, nxt) - price
         no = np.interp(GRID[:, None] * p[None, :], GRID, nxt)
         W[j] = np.maximum(call[:, None], no).mean(1)
     return W
 
 
 # ---------------------------------------------------------------- simulation on exact trees
-def simulate(P: np.ndarray, leaf: np.ndarray, tuples: np.ndarray, rule: Callable, score: np.ndarray = None):
+def simulate(P: np.ndarray, leaf: np.ndarray, tuples: np.ndarray, rule: Callable, score: np.ndarray = None, q: Sequence[float] = None):
     """Run a sequential rule on composite tasks. tuples (G, m) index instances. rule(j, b, p, s) -> bool array (call?).
+    q (optional): per-level tool accuracy; the agent's belief then becomes b q_j after a call (default: unchanged, exact tool).
     Returns success (G,), calls (G,)."""
     G, m = tuples.shape
     K = n_steps_of(P)
@@ -178,7 +181,7 @@ def simulate(P: np.ndarray, leaf: np.ndarray, tuples: np.ndarray, rule: Callable
             sc = p if score is None else score[inst, nid]
             a = rule(j, b, p, sc).astype(np.int64)
             calls += a
-            b = np.where(a == 1, b, b * p)
+            b = np.where(a == 1, b if q is None else b * q[j % len(q)], b * p)
             bits = bits * 2 + a
             nid = 2 * nid + 1 + a
             j += 1
@@ -205,10 +208,11 @@ def rule_threshold(tau):          # tuned score threshold (Anchor-lite)
     return lambda j, b, p, s: s < tau
 
 
-def rule_dp(W, price):
+def rule_dp(W, price, q=None):
     def f(j, b, p, s):
         nx = W[j + 1]
-        return np.interp(b, GRID, nx) - price > np.interp(b * p, GRID, nx) + 1e-12
+        bc = b if q is None else b * q[j % len(q)]
+        return np.interp(bc, GRID, nx) - price > np.interp(b * p, GRID, nx) + 1e-12
     return f
 
 
@@ -273,12 +277,21 @@ def default_sizes(n: int):
     return {"train": tr, "cal": ca, "gate": ga, "test": n - tr - ca - ga}
 
 
-def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=None, MS=MS_DEFAULT, price_scale=1.0):
+def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=None, MS=MS_DEFAULT, price_scale=1.0, call_ok=None, prefix_ok=None):
     """For every signal: fit the step-correctness signal (Platt or isotonic, chosen on the GATE split), then run every rule on composites of m
-    parts. feats: name -> (N, 2^K-1, d); Y: (N, 2^K-1) step correctness; leaf: (N, 2^K) final correctness."""
+    parts. feats: name -> (N, 2^K-1, d); Y: (N, 2^K-1) step correctness; leaf: (N, 2^K) final correctness.
+    call_ok / prefix_ok (both (N, 2^K-1), optional): adds the rule "belief_dp_noisy", Belief-DP with the tool accuracy q_l estimated on the training split
+    (share of correct called steps at level l among nodes whose prefix is correct); it is not one of the nine rules of the study and is reported separately."""
     sp = make_splits(ids, sizes, seed)
     tr, ca, ga, te = sp["train"], sp["cal"], sp["gate"], sp["test"]
     tc = np.sort(np.concatenate([tr, ca]))
+    qs = None
+    if call_ok is not None:
+        qs = []
+        for lv in range(n_steps_of(Y)):
+            sl = slice(2 ** lv - 1, 2 ** (lv + 1) - 1)
+            ok, co = prefix_ok[tr][:, sl], call_ok[tr][:, sl]
+            qs.append(float(co[ok].mean()) if ok.any() else float(co.mean()))
     out = {}
     for sig, X in feats.items():
         sp_ = StepSignal(Cs.get(sig, 1.0)).fit(X[tr], Y[tr], X[ca], Y[ca])
@@ -297,6 +310,8 @@ def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=N
         auroc = (r[yt == 1].sum() - npos * (npos + 1) / 2) / (npos * nneg) if npos > 0 and nneg > 0 else float("nan")
         res = {"auroc_step_test": float(auroc), "brier_step_test": float(np.mean((pt - yt) ** 2)), "calibrator": pick, "gate_logloss": gate,
                "mean_p_by_level": means, "m": {}}
+        if qs is not None:
+            res["q_by_level"] = qs
         rng = np.random.default_rng(1000 + seed)
         tau1 = {lam: tune(P[ca], leaf[ca], 1, price_scale * lam, np.random.default_rng(7), P[ca]) for lam in LAMBDAS}
         rules = {}
@@ -310,13 +325,15 @@ def evaluate_signals(feats, Y, leaf, ids, sizes, seed, Cs, B=0, reps=40, calib=N
                                    "thr_transfer": rule_threshold(tau1[lam]),
                                    "thr_retuned": rule_threshold(tune(P[ca], leaf[ca], m, pr, np.random.default_rng(7), P[ca])),
                                    "belief_dp": rule_dp(W, pr)}
+                if qs is not None:
+                    rules[(m, lam)]["belief_dp_noisy"] = rule_dp(belief_dp(samples, T, pr, qs), pr, qs)
         for m in MS:
             tp = make_tuples(te, m, rng, reps=reps)
             block = {}
-            for name in RULES:
+            for name in RULES + (("belief_dp_noisy",) if qs is not None else ()):
                 U, S, Kc = [], [], []
                 for lam in LAMBDAS:
-                    ok, c = hindsight(leaf, tp, price_scale * lam / m) if name == "hindsight" else simulate(P, leaf, tp, rules[(m, lam)][name])
+                    ok, c = hindsight(leaf, tp, price_scale * lam / m) if name == "hindsight" else simulate(P, leaf, tp, rules[(m, lam)][name], q=qs if name == "belief_dp_noisy" else None)
                     U.append(float((ok - price_scale * lam / m * c).mean()))
                     S.append(float(ok.mean()))
                     Kc.append(float(c.mean() / m))

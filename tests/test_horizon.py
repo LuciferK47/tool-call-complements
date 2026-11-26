@@ -164,3 +164,44 @@ def test_signal_aware_is_zero_for_a_perfect_signal():
     from toolcomp.horizon import predicted_regret_signal
     samples = [np.concatenate([np.full(30, 0.02), np.full(30, 0.999)])] * 3
     assert predicted_regret_signal(samples, 1, G=2000) < 2.0
+
+
+# ---------------------------------------------------------------- noisy-tool Belief-DP (call makes the step right with probability q, not 1)
+def test_noisy_belief_dp_matches_expectimax():
+    """Finite-support laws and per-level tool accuracies: the grid DP equals exact expectimax with the call branch W(b q)."""
+    laws = [np.array([0.3, 0.9]), np.array([0.5, 0.95]), np.array([0.6, 0.99])]
+    q = [0.8, 0.6, 0.9]
+    for price in (0.02, 0.1, 0.25):
+        for T in (3, 6):
+            def ev(j, b):
+                if j == T:
+                    return b
+                return float(np.mean([max(ev(j + 1, b * q[j % 3]) - price, ev(j + 1, b * p)) for p in laws[j % 3]]))
+            W = belief_dp(laws, T, price, q)
+            for b in (0.0, 0.3, 0.7, 1.0):
+                assert abs(np.interp(b, GRID, W[0]) - ev(0, b)) < 4e-3
+
+
+def test_noisy_belief_dp_with_exact_tool_is_the_exact_dp():
+    laws = [np.array([0.3, 0.9]), np.array([0.5, 0.95]), np.array([0.6, 0.99])]
+    for price in (0.05, 0.2):
+        assert np.array_equal(belief_dp(laws, 9, price, [1.0, 1.0, 1.0]), belief_dp(laws, 9, price))
+        assert np.array_equal(belief_dp(laws, 9, price, None), belief_dp(laws, 9, price))
+
+
+def test_simulate_multiplies_belief_by_tool_accuracy_on_a_call():
+    """A rule that records the belief it is shown: after a call the belief is b q_j, after an unaided step b p."""
+    P = np.full((4, 3), 0.5)
+    leaf = np.ones((4, 4), bool)
+    tuples = np.arange(4).reshape(4, 1)
+    seen = []
+
+    def rule(j, b, p, s):
+        seen.append(b.copy())
+        return np.full(len(p), j == 0)               # call at step 0 only
+
+    simulate(P, leaf, tuples, rule, q=[0.7, 0.9])
+    assert np.allclose(seen[0], 1.0) and np.allclose(seen[1], 0.7) and np.allclose(seen[1] * 0.5, 0.35)
+    seen.clear()
+    simulate(P, leaf, tuples, rule)                  # exact tool: a call leaves the belief unchanged
+    assert np.allclose(seen[1], 1.0)

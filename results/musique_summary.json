@@ -1,4 +1,274 @@
 {
+ "musique_k2_q35_2b": {
+  "n": 300,
+  "K": 2,
+  "never": 0.016666666666666666,
+  "all_call": 0.36666666666666664,
+  "tool_right_given_correct_prefix": [
+   0.5866666666666667,
+   0.4897959183673469
+  ],
+  "share_correct_with_wrong_hop": 0.36470588235294116,
+  "complements": 69,
+  "substitutes": 9,
+  "belief_dp_worst_shortfall_vs_never": 37.192307692307686,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.5407407407407407,
+    0.5421686746987951
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 37.192307692307686,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 3,
+   "best_gain_over_never": 1.5333333333333337
+  }
+ },
+ "musique_k2_q35_4b": {
+  "n": 300,
+  "K": 2,
+  "never": 0.05333333333333334,
+  "all_call": 0.4266666666666667,
+  "tool_right_given_correct_prefix": [
+   0.7,
+   0.55893536121673
+  ],
+  "share_correct_with_wrong_hop": 0.20816326530612245,
+  "complements": 61,
+  "substitutes": 19,
+  "belief_dp_worst_shortfall_vs_never": 42.685897435897424,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.6888888888888889,
+    0.5806451612903226
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 42.685897435897424,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 3,
+   "best_gain_over_never": 2.8857142857142852
+  }
+ },
+ "musique_k2_q35_9b": {
+  "n": 300,
+  "K": 2,
+  "never": 0.09666666666666666,
+  "all_call": 0.47,
+  "tool_right_given_correct_prefix": [
+   0.7133333333333334,
+   0.5842293906810035
+  ],
+  "share_correct_with_wrong_hop": 0.16304347826086957,
+  "complements": 73,
+  "substitutes": 9,
+  "belief_dp_worst_shortfall_vs_never": 40.119871794871784,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.6888888888888889,
+    0.6141732283464567
+   ],
+   "worst_shortfall_vs_never": 0.007211538461538491,
+   "worst_shortfall_vs_best_of_nine": 0.39047619047619264,
+   "max_gain_over_exact_dp": 40.119871794871784,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 3,
+   "cells_noisy_beats_never_by_1": 3,
+   "best_gain_over_never": 2.390476190476189
+  }
+ },
+ "musique_k3_q35_2b": {
+  "n": 200,
+  "K": 3,
+  "never": 0.03,
+  "all_call": 0.24,
+  "tool_right_given_correct_prefix": [
+   0.635,
+   0.5,
+   0.46153846153846156
+  ],
+  "share_correct_with_wrong_hop": 0.6910994764397905,
+  "complements": 75,
+  "substitutes": 51,
+  "belief_dp_worst_shortfall_vs_never": 32.8529411764706,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.6222222222222222,
+    0.5223880597014925,
+    0.46296296296296297
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.004761904761905633,
+   "max_gain_over_exact_dp": 32.8529411764706,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 8,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.02857142857142847
+  }
+ },
+ "musique_k3_q35_4b": {
+  "n": 200,
+  "K": 3,
+  "never": 0.045,
+  "all_call": 0.355,
+  "tool_right_given_correct_prefix": [
+   0.75,
+   0.5989583333333334,
+   0.4725274725274725
+  ],
+  "share_correct_with_wrong_hop": 0.6297709923664122,
+  "complements": 114,
+  "substitutes": 58,
+  "belief_dp_worst_shortfall_vs_never": 32.4607843137255,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.7444444444444445,
+    0.6666666666666666,
+    0.47674418604651164
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.32380952380952355,
+   "max_gain_over_exact_dp": 32.4607843137255,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.2952380952380951
+  }
+ },
+ "musique_k3_q35_9b": {
+  "n": 200,
+  "K": 3,
+  "never": 0.025,
+  "all_call": 0.32,
+  "tool_right_given_correct_prefix": [
+   0.735,
+   0.6,
+   0.4371584699453552
+  ],
+  "share_correct_with_wrong_hop": 0.5684647302904564,
+  "complements": 102,
+  "substitutes": 68,
+  "belief_dp_worst_shortfall_vs_never": 32.8529411764706,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.6888888888888889,
+    0.691358024691358,
+    0.4588235294117647
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 32.8529411764706,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 9,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
+ },
+ "musique_k4_q35_2b": {
+  "n": 100,
+  "K": 4,
+  "never": 0.01,
+  "all_call": 0.18,
+  "tool_right_given_correct_prefix": [
+   0.56,
+   0.6060606060606061,
+   0.3584905660377358,
+   0.6
+  ],
+  "share_correct_with_wrong_hop": 0.8672566371681416,
+  "complements": 84,
+  "substitutes": 55,
+  "belief_dp_worst_shortfall_vs_never": 18.470588235294112,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.6,
+    0.6060606060606061,
+    0.25925925925925924,
+    0.625
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 18.470588235294112,
+   "cells": 6,
+   "cells_within_1_of_never": 6,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
+ },
+ "musique_k4_q35_4b": {
+  "n": 100,
+  "K": 4,
+  "never": 0.0,
+  "all_call": 0.16,
+  "tool_right_given_correct_prefix": [
+   0.72,
+   0.5978260869565217,
+   0.3655913978494624,
+   0.3469387755102041
+  ],
+  "share_correct_with_wrong_hop": 0.8316831683168316,
+  "complements": 108,
+  "substitutes": 83,
+  "belief_dp_worst_shortfall_vs_never": 19.382352941176467,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.7111111111111111,
+    0.46808510638297873,
+    0.325,
+    0.5
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 19.382352941176467,
+   "cells": 6,
+   "cells_within_1_of_never": 6,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
+ },
+ "musique_k4_q35_9b": {
+  "n": 100,
+  "K": 4,
+  "never": 0.02,
+  "all_call": 0.17,
+  "tool_right_given_correct_prefix": [
+   0.71,
+   0.631578947368421,
+   0.46,
+   0.5303030303030303
+  ],
+  "share_correct_with_wrong_hop": 0.656,
+  "complements": 103,
+  "substitutes": 77,
+  "belief_dp_worst_shortfall_vs_never": 19.14705882352941,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.7111111111111111,
+    0.5625,
+    0.2826086956521739,
+    0.8095238095238095
+   ],
+   "worst_shortfall_vs_never": 0.01904761904761898,
+   "worst_shortfall_vs_best_of_nine": 0.01904761904761898,
+   "max_gain_over_exact_dp": 19.14705882352941,
+   "cells": 6,
+   "cells_within_1_of_never": 6,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
+ },
  "musique_k2_gpu_0p5b": {
   "n": 200,
   "K": 2,
@@ -11,7 +281,21 @@
   "share_correct_with_wrong_hop": 0.49230769230769234,
   "complements": 28,
   "substitutes": 15,
-  "belief_dp_worst_shortfall_vs_never": 37.999999999999986
+  "belief_dp_worst_shortfall_vs_never": 37.999999999999986,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.45555555555555555,
+    0.32558139534883723
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.014285714285714235,
+   "max_gain_over_exact_dp": 37.999999999999986,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 8,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
  },
  "musique_k2_q35_0p8b": {
   "n": 200,
@@ -25,7 +309,21 @@
   "share_correct_with_wrong_hop": 0.4,
   "complements": 41,
   "substitutes": 6,
-  "belief_dp_worst_shortfall_vs_never": 57.205882352941174
+  "belief_dp_worst_shortfall_vs_never": 44.26470588235293,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.4888888888888889,
+    0.425531914893617
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 44.26470588235293,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 9,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.5047619047619047
+  }
  },
  "musique_k3_gpu_0p5b": {
   "n": 150,
@@ -40,7 +338,22 @@
   "share_correct_with_wrong_hop": 0.8229166666666666,
   "complements": 43,
   "substitutes": 25,
-  "belief_dp_worst_shortfall_vs_never": 33.00000000000001
+  "belief_dp_worst_shortfall_vs_never": 33.00000000000001,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.45588235294117646,
+    0.34285714285714286,
+    0.3333333333333333
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 33.00000000000001,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 9,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
  },
  "musique_k3_q35_0p8b": {
   "n": 150,
@@ -55,7 +368,22 @@
   "share_correct_with_wrong_hop": 0.7087378640776699,
   "complements": 53,
   "substitutes": 33,
-  "belief_dp_worst_shortfall_vs_never": 33.00000000000001
+  "belief_dp_worst_shortfall_vs_never": 32.87179487179488,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.5,
+    0.42857142857142855,
+    0.5
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 32.87179487179488,
+   "cells": 9,
+   "cells_within_1_of_never": 9,
+   "cells_never_is_best": 9,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
  },
  "musique_k4_gpu_0p5b": {
   "n": 80,
@@ -71,7 +399,23 @@
   "share_correct_with_wrong_hop": 0.98989898989899,
   "complements": 73,
   "substitutes": 53,
-  "belief_dp_worst_shortfall_vs_never": 19.67857142857143
+  "belief_dp_worst_shortfall_vs_never": 19.142857142857142,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.4444444444444444,
+    0.22727272727272727,
+    0.2,
+    0.0
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 19.142857142857142,
+   "cells": 6,
+   "cells_within_1_of_never": 6,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
  },
  "musique_k4_q35_0p8b": {
   "n": 80,
@@ -87,6 +431,22 @@
   "share_correct_with_wrong_hop": 0.9230769230769231,
   "complements": 79,
   "substitutes": 38,
-  "belief_dp_worst_shortfall_vs_never": 19.678571428571423
+  "belief_dp_worst_shortfall_vs_never": 19.07142857142857,
+  "belief_dp_noisy": {
+   "q_by_level": [
+    0.4166666666666667,
+    0.3157894736842105,
+    0.5714285714285714,
+    0.5
+   ],
+   "worst_shortfall_vs_never": 0.0,
+   "worst_shortfall_vs_best_of_nine": 0.0,
+   "max_gain_over_exact_dp": 19.07142857142857,
+   "cells": 6,
+   "cells_within_1_of_never": 6,
+   "cells_never_is_best": 6,
+   "cells_noisy_beats_never_by_1": 0,
+   "best_gain_over_never": 0.0
+  }
  }
 }

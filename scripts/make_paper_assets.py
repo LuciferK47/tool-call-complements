@@ -19,13 +19,24 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import check_predictions as cp
 from toolcomp.horizon import rule_expected_utility
 
-ORDER = ["primary_0p5b", "gpu_0p5b_seed20261201", "q35_0p8b", "q35_0p8b_seed20261120", "q35_0p8b_seed20261201", "q35_0p8b_incremental", "q35_2b", "q35_4b", "q35_9b"]
-NAME = {"primary_0p5b": "Qwen2.5-0.5B", "q35_0p8b": "Qwen3.5-0.8B", "q35_0p8b_seed20261120": "Qwen3.5-0.8B (fresh pool)",
-        "q35_0p8b_incremental": "Qwen3.5-0.8B (hidden operands)", "gpu_0p5b_seed20261201": "Qwen2.5-0.5B (fresh pool 2)", "q35_0p8b_seed20261201": "Qwen3.5-0.8B (fresh pool 2)", "q35_2b": "Qwen3.5-2B", "q35_4b": "Qwen3.5-4B", "q35_9b": "Qwen3.5-9B"}
-TBL = {"gpu_0p5b_seed20261201": "0.5B fresh pool", "q35_0p8b_seed20261201": "0.8B fresh pool 2", "primary_0p5b": "0.5B (Qwen2.5)", "q35_0p8b": "0.8B", "q35_0p8b_seed20261120": "0.8B fresh pool", "q35_0p8b_incremental": "0.8B hidden operands", "q35_2b": "2B", "q35_4b": "4B", "q35_9b": "9B"}
-SHORT = {"gpu_0p5b_seed20261201": "0.5B f", "q35_0p8b_seed20261201": "0.8B f2", "primary_0p5b": "0.5B", "q35_0p8b": "0.8B", "q35_0p8b_seed20261120": "0.8B fresh", "q35_0p8b_incremental": "0.8B hidden", "q35_2b": "2B", "q35_4b": "4B", "q35_9b": "9B"}
-COL = {"gpu_0p5b_seed20261201": "#d4614f", "q35_0p8b_seed20261201": "#f0a850", "primary_0p5b": "#a23b2a", "q35_0p8b": "#d98324", "q35_0p8b_seed20261120": "#e3b341", "q35_0p8b_incremental": "#8a6d3b", "q35_2b": "#2a78d6", "q35_4b": "#1baf7a", "q35_9b": "#4a3aa7"}
-TABLE_RUNS = ["primary_0p5b", "q35_0p8b", "q35_0p8b_incremental", "q35_2b", "q35_4b", "q35_9b"]
+FRESH5 = ["gpu_0p5b_seed20261201", "q35_0p8b_seed20261201", "q35_2b_seed20261201", "q35_4b_seed20261201", "q35_9b_seed20261201"]       # one pool (generator seed 20261201), five models
+ORDER = ["primary_0p5b", "gpu_0p5b_seed20261201", "q35_0p8b", "q35_0p8b_seed20261120", "q35_0p8b_seed20261201", "q35_0p8b_incremental", "q35_2b", "q35_4b", "q35_9b",
+         "q35_2b_seed20261201", "q35_4b_seed20261201", "q35_9b_seed20261201"]                                                              # every 3-step run
+SIX = ["arith6_gpu_0p5b", "arith6_q35_0p8b", "arith6_q35_2b", "arith6_q35_4b", "arith6_q35_9b"]                                            # 6-step chains, committed prices
+SIXM = [t + "_matched" for t in SIX]                                                                                                       # the same at half the per-call price
+MODEL_NAME = {"0p5b": "0.5B", "0p8b": "0.8B", "2b": "2B", "4b": "4B", "9b": "9B"}
+MODEL_COL = {"0p5b": "#a23b2a", "0p8b": "#d98324", "2b": "#2a78d6", "4b": "#1baf7a", "9b": "#4a3aa7"}
+ROW = {"gpu_0p5b_seed20261201": "0.5B", "q35_0p8b_seed20261201": "0.8B", "q35_2b_seed20261201": "2B", "q35_4b_seed20261201": "4B", "q35_9b_seed20261201": "9B"}
+
+
+def model_of(t):
+    return next(k for k in MODEL_NAME if k in t)
+
+
+def marker_of(t):
+    return "^" if t.startswith("arith6_") else ("s" if "seed20261201" in t else "o")
+
+
 M = {}
 
 
@@ -45,8 +56,8 @@ def main():
     a = ap.parse_args()
     out, res = Path(a.out), Path(a.results)
     (out / "figures").mkdir(parents=True, exist_ok=True)
-    R = {t: json.loads((res / "scaling" / f"{t}.json").read_text()) for t in ORDER if (res / "scaling" / f"{t}.json").exists()}
-    extra = sorted(p.stem for p in (res / "scaling").glob("*.json") if p.stem not in ORDER)
+    R = {t: json.loads((res / "scaling" / f"{t}.json").read_text()) for t in ORDER + SIX if (res / "scaling" / f"{t}.json").exists()}
+    extra = sorted(p.stem for p in (res / "scaling").glob("*.json") if p.stem not in R)
     C = {t: cp.cells(R[t]) for t in R}
     allc = [c for t in R for c in C[t]]
     S = json.loads((res / "predictions_scored.json").read_text()) if (res / "predictions_scored.json").exists() else None
@@ -56,6 +67,8 @@ def main():
     dpf = np.array([c["dp_vs_label_free"] for c in allc]); dpa = np.array([c["dp_vs_all"] for c in allc])
     dpr = np.array([c["u"]["belief_dp"] - c["u"]["thr_retuned"] for c in allc])
     macro("NRuns", str(len(R)))
+    macro("NThree", str(len([t for t in R if t in ORDER])))
+    macro("NSix", str(len([t for t in R if t in SIX])))
     macro("NCells", str(len(allc)))
     macro("RhoAll", f"{spearmanr(x, r)[0]:.2f}")
     macro("PearAll", f"{pearsonr(pr, r)[0]:.2f}")
@@ -108,6 +121,51 @@ def main():
         macro("PArithPear", f"{S['v1_as_protocol_all_signals']['P4']['pearson']:.2f}")
         macro("PArithThreeFrac", f"{100 * S['v1_as_protocol_all_signals']['P3']['fraction_ge8']:.0f}")
         macro("PSixFrac", f"{100 * S['v1_plus_6step_committed_prices']['P3']['fraction_ge8']:.0f}")
+    if S:
+        for key, nm in (("v2_as_written_all_unseen", "VA"), ("v2_l40s_completely_unseen", "VL"), ("v2_l40s_matched_price", "VM"), ("v2_l40s_with_musique", "VQ")):
+            v2 = S[key]
+            macro(f"{nm}NCells", str(v2["n_cells"]))
+            macro(f"{nm}Pear", f"{v2['V1']['pearson']:.2f}")
+            macro(f"{nm}ClosedPear", f"{v2['V1']['closed_form_pearson']:.2f}")
+            macro(f"{nm}MAE", f"{v2['V2']['mae']:.2f}")
+            macro(f"{nm}ClosedMAE", f"{v2['V2']['closed_form_mae']:.2f}")
+            macro(f"{nm}InfMAE", f"{v2['V3']['mae_signal_informative']:.2f}")
+            macro(f"{nm}InfClosedMAE", f"{v2['V3']['mae_closed_informative']:.2f}")
+            macro(f"{nm}DiffZero", f"{v2['V3']['mae_difference_on_S0']:.1f}")
+            macro(f"{nm}MidN", str(v2["V4"]["n"]))
+            macro(f"{nm}MidPear", f"{v2['V4']['pearson']:.2f}")
+            macro(f"{nm}Held", str(sum(bool(v2[k]["held"]) for k in ("V1", "V2", "V3", "V4"))))
+        def _spread(d):                       # largest range over the three re-partitions of the measured regret of one cell
+            top = 0.0
+            for sig in d["runs"]["partition_0"]:
+                for m in d["ms"]:
+                    rg = []
+                    for i in range(3):
+                        u = {r: d["runs"][f"partition_{i}"][sig]["m"][str(m)]["rules"][r]["u_auc"] for r in cp.ALL}
+                        rg.append(max(u.values()) - max(u[r] for r in cp.PER_STEP))
+                    top = max(top, max(rg) - min(rg))
+            return top
+        macro("VLSpread", f"{max(_spread(R[t]) for t in cp.L40S_RUNS if t in R):.0f}")
+        sx = S["v1_plus_6step_committed_prices"]
+        macro("PSixDPMax", f1(sx["P5"]["max"]))
+        macro("PSixRho", f"{sx['P1']['spearman']:.2f}")
+        macro("PFreshRho", f"{S['replication_pools_20261201']['P1']['spearman']:.2f}")
+        macro("PFreshPear", f"{S['replication_pools_20261201']['P4']['pearson']:.2f}")
+        macro("PFreshHigh", f"{100 * S['replication_pools_20261201']['P3']['fraction_ge8']:.0f}")
+        macro("PFreshDPMax", f1(S["replication_pools_20261201"]["P5"]["max"]))
+        macro("PSixMatchedHigh", f"{100 * S['v1_plus_6step_matched_prices']['P3']['fraction_ge8']:.0f}")
+        macro("PSixMatchedRho", f"{S['v1_plus_6step_matched_prices']['P1']['spearman']:.2f}")
+        if "P6_shared_pool" in S:
+            for t, k in zip(FRESH5, "ABCDE"):
+                cc, ss = S["P6_shared_pool"]["counts"][t]
+                macro(f"Fr{k}Comp", str(cc))
+                macro(f"Fr{k}Subs", str(ss))
+                rr = cc / max(1, ss)
+                macro(f"Fr{k}Rat", f"{rr:.0f}" if rr >= 10 else (f"{rr:.1f}" if rr >= 1 else f"{rr:.2f}"))
+    # the shared fresh pool: how much an informative signal shrinks the regret at T = 24 (2B)
+    if "q35_2b_seed20261201" in C:
+        for sig, k in (("S0", "Zero"), ("S1", "Hid"), ("S4", "Conf"), ("S0+S4", "Fuse")):
+            macro(f"FrTwo{k}", f1(next(c for c in C["q35_2b_seed20261201"] if c["sig"] == sig and c["m"] == 8)["best_per_step_regret"]))
     # informative signals shrink the regret at fixed x (0.8B, T = 24)
     for sig, k in (("S0", "SigZero"), ("S4", "SigConf"), ("S0+S4", "SigFuse")):
         c = next(c for c in C["q35_0p8b"] if c["sig"] == sig and c["m"] == 8)
@@ -136,15 +194,21 @@ def main():
     from toolcomp.eval_harness import LAMBDAS as _L
     macro("CeilThree", f1(float(_auc(np.maximum(0, 1 - 3 * np.array(_L))))))
     macro("CeilSix", f1(float(_auc(np.maximum(0, 1 - 6 * np.array(_L))))))
-    for t, k in (("arith6_gpu_0p5b_matched", "SixA"), ("arith6_q35_0p8b_matched", "SixB")):
+    dpall = []
+    for t, k in zip(SIXM, "ABCDE"):
+        k = "Six" + k
         if t in extra:
             d = json.loads((res / "scaling" / f"{t}.json").read_text())
             cs = {(c["sig"], c["m"]): c for c in cp.cells(d)}
             macro(f"{k}x", f1(cs[("S0", 1)]["x"]))
             macro(f"{k}Zero", f1(cs[("S0", 1)]["best_per_step_regret"]))
             macro(f"{k}Fuse", f1(cs[("S0+S4", 1)]["best_per_step_regret"]))
+            macro(f"{k}Long", f1(cs[("S0", 32)]["best_per_step_regret"]))
             macro(f"{k}DPMax", f1(max(c["dp_vs_label_free"] for c in cs.values())))
             macro(f"{k}Never", f"{100 * d['never_accuracy']:.0f}")
+            dpall.append(max(c["dp_vs_label_free"] for c in cs.values()))
+    macro("SixDPAll", f1(max(dpall)))
+    macro("SixDPExB", f1(max(v for t_, v in zip(SIXM, dpall) if "0p8b" not in t_)))
     ms = res / "musique_summary.json"
     if ms.exists():
         mu = json.loads(ms.read_text())
@@ -154,17 +218,32 @@ def main():
         macro("MusWrongMin", f"{100 * min(v['share_correct_with_wrong_hop'] for v in mu.values()):.0f}")
         macro("MusWrongMax", f"{100 * max(v['share_correct_with_wrong_hop'] for v in mu.values()):.0f}")
         macro("MusDPShort", f1(max(v["belief_dp_worst_shortfall_vs_never"] for v in mu.values())))
+        qs_ = [x for v in mu.values() for x in v["tool_right_given_correct_prefix"] if x is not None]
+        macro("NMus", str(len(mu)))
+        macro("MusToolMin", f"{100 * min(qs_):.0f}")
+        macro("MusToolMax", f"{100 * max(qs_):.0f}")
+        nz = [v["belief_dp_noisy"] for v in mu.values() if "belief_dp_noisy" in v]
+        if nz:
+            ncell = sum(v["cells"] for v in nz)
+            macro("MusNZCells", str(ncell))
+            macro("MusNZNever", f"{max(v['worst_shortfall_vs_never'] for v in nz):.2f}")
+            macro("MusNZBest", f"{max(v['worst_shortfall_vs_best_of_nine'] for v in nz):.1f}")
+            macro("MusNZNeverBest", f"{100 * sum(v['cells_never_is_best'] for v in nz) / ncell:.0f}")
+            macro("MusNZBeat", f"{100 * sum(v['cells_noisy_beats_never_by_1'] for v in nz) / ncell:.0f}")
+            macro("MusNZGain", f1(max(v["best_gain_over_never"] for v in nz)))
         macro("MusComp", str(sum(v["complements"] for v in mu.values())))
         macro("MusSubs", str(sum(v["substitutes"] for v in mu.values())))
-    # ------------------------------------------------------------ Table: one row per run (signal S0, so every run is comparable)
-    L = ["\\begin{tabular}{@{}lrrrrrr@{}}\\toprule", "Run & $x_{3}$ & $x_{24}$ & \\multicolumn{3}{c}{Regret at $T$=} & DP \\\\",
-         " & & & 3 & 12 & 24 & gap \\\\ \\midrule"]
-    for t in TABLE_RUNS:                                    # the other pools (fresh pools, hidden operands) are in results/scaling/
+    # ------------------------------------------------------------ Table: the shared fresh pool (one set of 1000 instances, five models, every signal)
+    L = ["\\begin{tabular}{@{}lrrrrrrr@{}}\\toprule", "Model & $x_{24}$ & \\multicolumn{4}{c}{Regret at $T$=24} & DP & C:S \\\\",
+         " & & S0 & S1 & S4 & S0+S4 & gap & \\\\ \\midrule"]
+    for t in FRESH5:
         if t not in R:
             continue
-        cs = {c["m"]: c for c in C[t] if c["sig"] == "S0"}
-        gap = max(c["dp_vs_label_free"] for c in cs.values())
-        L.append(f"{TBL[t]} & {cs[1]['x']:.2f} & {cs[8]['x']:.1f} & {cs[1]['best_per_step_regret']:.1f} & {cs[4]['best_per_step_regret']:.1f} & {cs[8]['best_per_step_regret']:.1f} & {gap:.1f} \\\\")
+        cs = {(c["sig"], c["m"]): c for c in C[t]}
+        gap = max(c["dp_vs_label_free"] for c in C[t])
+        sd = R[t]["second_differences"]
+        L.append(f"{ROW[t]} & {cs[('S0', 8)]['x']:.1f} & " + " & ".join(f"{cs[(g, 8)]['best_per_step_regret']:.1f}" for g in ("S0", "S1", "S4", "S0+S4"))
+                 + f" & {gap:.1f} & {sd['complements']}:{sd['substitutes']} \\\\")
     L.append("\\bottomrule\\end{tabular}")
     (out / "gen_runs.tex").write_text("\n".join(L))
 
@@ -206,7 +285,7 @@ def main():
     import matplotlib.pyplot as plt
     plt.rcParams.update({"font.family": "serif", "font.size": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.6,
                          "axes.edgecolor": "#8a8984", "xtick.color": "#52514e", "ytick.color": "#52514e"})
-    fig, axs = plt.subplots(1, 3, figsize=(7.0, 2.05), gridspec_kw={"width_ratios": [1, 1.15, 1]})
+    fig, axs = plt.subplots(1, 3, figsize=(7.0, 1.72), gridspec_kw={"width_ratios": [1, 1.15, 1]})
     # (a) utility versus total price for a homogeneous chain
     ax = axs[0]
     T, p = 12, 0.9
@@ -218,18 +297,23 @@ def main():
     ax.set_title(f"(a) chain with $T$={T}, $p$={p}", fontsize=7.5)
     ax.legend(frameon=False, fontsize=6.5, loc="upper right")
     # (b) predicted against measured regret of the best per-step rule
+    from matplotlib.lines import Line2D
     ax = axs[1]
-    for t in ORDER:
-        if t not in R:
-            continue
+    for t in R:
         cs = C[t]
-        ax.scatter([c["predicted_best_per_step"] for c in cs], [c["best_per_step_regret"] for c in cs], s=9, facecolors="none", edgecolors="#8a8984", lw=0.5, zorder=2)
-        ax.scatter([c["signal_aware"] for c in cs], [c["best_per_step_regret"] for c in cs], s=7, color=COL[t], label=SHORT[t], zorder=3, lw=0)
+        ax.scatter([c["predicted_best_per_step"] for c in cs], [c["best_per_step_regret"] for c in cs], s=8, marker=marker_of(t), facecolors="none", edgecolors="#9a9994", lw=0.4, zorder=2)
+        ax.scatter([c["signal_aware"] for c in cs], [c["best_per_step_regret"] for c in cs], s=7, marker=marker_of(t), color=MODEL_COL[model_of(t)], lw=0, zorder=3)
     ax.plot([0, 19], [0, 19], color="#0b0b0b", lw=0.6)
+    for yc in (4.0, 17.0):
+        ax.axhline(yc, color="#b9b8b2", lw=0.5, ls=":", zorder=1)
+    ax.set_xlim(-0.5, 19)
+    ax.set_ylim(-0.5, 19.5)
     ax.set_xlabel("predicted regret (pts)")
     ax.set_ylabel("measured regret (pts)")
     ax.set_title("(b) signal-aware (filled), closed form (open)", fontsize=7)
-    ax.legend(frameon=False, fontsize=5.0, ncol=2, loc="lower right", handletextpad=0.1, columnspacing=0.6, labelspacing=0.15)
+    hs = [Line2D([], [], marker="o", ls="", ms=3, color=MODEL_COL[k], label=MODEL_NAME[k]) for k in MODEL_NAME]
+    hs += [Line2D([], [], marker=m_, ls="", ms=3, mfc="#6b6a66", mec="none", label=l_) for m_, l_ in (("o", "3-step"), ("s", "fresh"), ("^", "6-step"))]
+    ax.legend(handles=hs, frameon=False, fontsize=5.0, ncol=2, loc="upper left", handletextpad=0.1, columnspacing=0.6, labelspacing=0.15, borderaxespad=0.1)
     # (c) label efficiency
     ax = axs[2]
     sty = {"q35_2b_S0_m4": ("#2a78d6", "2B, $T$=12"), "q35_0p8b_S0S4_m8": ("#d98324", "0.8B + conf., $T$=24"), "q35_0p8b_seed20261120_S0_m8": ("#e3b341", "0.8B fresh, $T$=24")}
@@ -240,13 +324,14 @@ def main():
         ns = sorted(int(n) for n in d["curve"])
         ax.errorbar(ns, [d["curve"][str(n)]["mean"] - d["belief_dp"] for n in ns], yerr=[d["curve"][str(n)]["sd"] for n in ns], color=col, marker="o", ms=2.5, lw=1.1, elinewidth=0.5, label=lab)
     ax.axhline(0, color="#0b0b0b", lw=0.8)
-    ax.text(1.05, 0.5, "Belief-DP (0 labels)", fontsize=6, va="bottom")
+    ax.set_ylim(-50, 7)
+    ax.text(1.05, 1.6, "Belief-DP (0 labels)", fontsize=6, va="bottom")
     ax.set_xscale("log")
     ax.set_xlabel("labelled long tasks used")
     ax.set_ylabel("re-tuned $-$ Belief-DP (pts)")
     ax.set_title("(c) label efficiency", fontsize=7.5)
     ax.legend(frameon=False, fontsize=5.8, loc="lower right")
-    fig.subplots_adjust(left=0.075, right=0.995, bottom=0.2, top=0.9, wspace=0.42)
+    fig.subplots_adjust(left=0.095, right=0.995, bottom=0.235, top=0.875, wspace=0.45)
     fig.savefig(out / "figures" / "fig1.pdf")
     fig.savefig(out / "figures" / "fig1.png", dpi=170)
     (out / "gen_macros.tex").write_text("\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in M.items()) + "\n")

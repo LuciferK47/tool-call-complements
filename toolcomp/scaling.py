@@ -186,13 +186,14 @@ def x_of(run: Run, m: int) -> float:
     return float(m * sum(1 - q for q in p))
 
 
-def evaluate_run(run: Run, seeds, MS, reps=40, B=0, sizes=None, signals=None, price_scale=1.0):
+def evaluate_run(run: Run, seeds, MS, reps=40, B=0, sizes=None, signals=None, price_scale=1.0, noisy=False):
     sizes = sizes or default_sizes(run.n)
     out = {}
+    extra = {"call_ok": run.call_ok, "prefix_ok": prefix_correct(run)} if noisy else {}      # noisy: also run Belief-DP with the measured tool accuracy
     for r, s in enumerate(seeds):
         ov = run.per_partition.get(r, {})
         feats = {k: v for k, v in ov.get("feats", run.feats).items() if signals is None or k in signals}
-        out[f"partition_{r}"] = evaluate_signals(feats, run.Y, run.leaf, run.ids, sizes, s, ov.get("C", run.C), B if r == 0 else 0, reps, None, MS, price_scale)
+        out[f"partition_{r}"] = evaluate_signals(feats, run.Y, run.leaf, run.ids, sizes, s, ov.get("C", run.C), B if r == 0 else 0, reps, None, MS, price_scale, **extra)
     return out
 
 

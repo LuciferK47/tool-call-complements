@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--results"), ap.add_argument("--light"), ap.add_argument("--deep")
     ap.add_argument("--ms", type=int, nargs="+", default=[1, 2, 4, 8, 16, 32])
     ap.add_argument("--price-scale", type=float, default=1.0, help="multiply every per-call price (0.5 gives K=6 parts the same total price range as K=3)")
+    ap.add_argument("--noisy-tool", action="store_true", help="also run Belief-DP with the measured tool accuracy per level (for tools that are not exact, e.g. retrieval)")
     ap.add_argument("--reps", type=int, default=40)
     ap.add_argument("--boot", type=int, default=0)
     ap.add_argument("--signals", nargs="+", default=None)
@@ -55,10 +56,12 @@ def main():
     res = {"tag": run.tag, "model": run.model, "env": run.env, "K": run.K, "n": run.n, "note": run.note, "price_scale": a.price_scale, "ms": a.ms, "reps": a.reps,
            "step_accuracy": scaling.step_accuracy(run), "x_by_m": {str(m): scaling.x_of(run, m) for m in a.ms},
            "never_accuracy": float(run.leaf[:, 0].mean()), "all_call_accuracy": float(run.leaf[:, -1].mean())}
+    if a.noisy_tool:
+        res["noisy_tool"] = True
     if run.K == 3:
         c, s = scaling.complement_counts(run)
         res["second_differences"] = {"complements": c, "substitutes": s}
-    res["runs"] = scaling.evaluate_run(run, SEEDS, tuple(a.ms), a.reps, a.boot, signals=a.signals, price_scale=a.price_scale)
+    res["runs"] = scaling.evaluate_run(run, SEEDS, tuple(a.ms), a.reps, a.boot, signals=a.signals, price_scale=a.price_scale, noisy=a.noisy_tool)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / f"{run.tag}.json").write_text(json.dumps(res))

@@ -77,6 +77,9 @@ def score_v2(C, ceiling=15.0):
 
 
 V2_RUNS = ["primary_0p5b", "q35_0p8b", "q35_2b", "q35_4b", "q35_9b"]          # configs/predictions_v2.yaml: unseen_prediction_only
+L40S_RUNS = ["arith6_q35_2b", "arith6_q35_4b", "arith6_q35_9b", "q35_2b_seed20261201", "q35_4b_seed20261201", "q35_9b_seed20261201"]    # unseen_completely: committed prices
+L40S_MATCHED = ["arith6_q35_2b_matched", "arith6_q35_4b_matched", "arith6_q35_9b_matched"]
+FRESH_POOLS = ["gpu_0p5b_seed20261201", "q35_0p8b_seed20261201", "q35_2b_seed20261201", "q35_4b_seed20261201", "q35_9b_seed20261201"]    # one shared pool (generator seed 20261201)
 EXPLORATORY = ["arith6_gpu_0p5b", "arith6_q35_0p8b", "arith6_gpu_0p5b_matched", "arith6_q35_0p8b_matched", "gpu_0p5b_seed20261201", "q35_0p8b_seed20261201"]
 
 
@@ -94,18 +97,28 @@ def main():
     out = {"all_runs": score(allc), "new_runs_only": score([c for c in allc if c["tag"] in NEW_RUNS]) if any(c["tag"] in NEW_RUNS for c in allc) else None, "runs": tags}
     byt = lambda tt: [c for t in tt if t in R for c in cells(R[t])]
     MUS = [t for t in R if t.startswith("musique_")]
-    out["v1_protocol_literal"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b", "arith6_q35_0p8b"] + MUS))          # protocol text: new runs + every gpu run that returned
+    A6 = sorted(t for t in R if t.startswith("arith6_") and not t.endswith("_matched"))          # every 6-step run that returned, committed price
+    A6M = sorted(t for t in R if t.startswith("arith6_") and t.endswith("_matched"))             # the same at half the per-call price
+    out["v1_protocol_literal"] = score(byt(NEW_RUNS + A6 + MUS))          # protocol text: new runs + every gpu run that returned
     out["v1_as_protocol_all_signals"] = score(byt(NEW_RUNS))                                    # the five pre-registered runs, every signal available
-    out["v1_plus_6step_committed_prices"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b", "arith6_q35_0p8b"]))
-    out["v1_plus_6step_matched_prices"] = score(byt(NEW_RUNS + ["arith6_gpu_0p5b_matched", "arith6_q35_0p8b_matched"]))
-    out["replication_pools_20261201"] = score(byt(["gpu_0p5b_seed20261201", "q35_0p8b_seed20261201"]))
-    out["v2_unseen_runs"] = score_v2(byt(V2_RUNS))
+    out["v1_plus_6step_committed_prices"] = score(byt(NEW_RUNS + A6))
+    out["v1_plus_6step_matched_prices"] = score(byt(NEW_RUNS + A6M))
+    out["replication_pools_20261201"] = score(byt(FRESH_POOLS))
+    out["v2_unseen_runs"] = score_v2(byt(V2_RUNS))                                                  # unseen_prediction_only (the 0.5B-9B runs of the first study)
+    out["v2_l40s_completely_unseen"] = score_v2(byt(L40S_RUNS))                                     # unseen_completely, committed prices
+    out["v2_as_written_all_unseen"] = score_v2(byt(V2_RUNS + L40S_RUNS))                            # "all cells of the unseen runs": both groups
+    out["v2_l40s_matched_price"] = score_v2(byt(L40S_MATCHED))                                      # not in the committed set: 6-step chains at half the price
+    out["v2_l40s_with_musique"] = score_v2(byt(L40S_RUNS + MUS))                                    # if MuSiQue is counted as a run of the bundle
     out["v2_exploratory_runs_not_a_test"] = score_v2(byt(EXPLORATORY))
     # P6 (pair counts, K=3 runs only)
     sd = {t: R[t].get("second_differences") for t in tags if R[t].get("second_differences")}
     ratio = {t: sd[t]["complements"] / max(1, sd[t]["substitutes"]) for t in sd}
     if all(k in ratio for k in ("q35_2b", "q35_4b", "q35_9b")):
         out["P6"] = {"held": bool(ratio["q35_2b"] > ratio["q35_4b"] > ratio["q35_9b"]), "ratios": {k: ratio[k] for k in ("q35_2b", "q35_4b", "q35_9b")}}
+    if all(t in ratio for t in FRESH_POOLS):                       # the same ordering on one pool shared by all five models (0.5B, 0.8B, 2B, 4B, 9B)
+        rr = [ratio[t] for t in FRESH_POOLS]
+        out["P6_shared_pool"] = {"held": bool(all(a_ > b_ for a_, b_ in zip(rr, rr[1:]))), "ratios": dict(zip(FRESH_POOLS, rr)),
+                                 "counts": {t: [sd[t]["complements"], sd[t]["substitutes"]] for t in FRESH_POOLS}}
     Path(a.json).write_text(json.dumps(out, indent=1))
     for k, v in out.items():
         print(k, json.dumps(v)[:600])
