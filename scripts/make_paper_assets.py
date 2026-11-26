@@ -2,7 +2,7 @@
 """Regenerate every number, table and figure in the paper from results/ (no number is typed by hand).
 
     python scripts/make_paper_assets.py --out paper_assets
-Writes gen_macros.tex, gen_runs.tex, gen_extra.tex and figures/fig1.pdf into --out.
+Writes gen_macros.tex, gen_runs.tex, gen_preds.tex and figures/fig1.pdf into --out.
 """
 
 import argparse
@@ -170,6 +170,9 @@ def main():
     for k, n in (("mup_vs_pp_step_direct", "PregA"), ("mup_vs_best_global_pattern", "PregB"), ("mup_vs_pp_first", "PregC")):
         macro(n, f"{pre[k]['diff']:+.2f}")
     macro("PregP", f"{max(v['p_holm'] for v in pre.values()):.4f}")
+    mags = [abs(pre[k]["diff"]) for k in ("mup_vs_pp_step_direct", "mup_vs_best_global_pattern", "mup_vs_pp_first")]
+    macro("PregLo", f"{min(mags):.2f}")
+    macro("PregHi", f"{max(mags):.2f}")
     # first horizon where best per-step regret exceeds 1 point, per run (S0)
     for t, k in (("q35_4b", "FourB"), ("q35_9b", "NineB"), ("q35_2b", "TwoB")):
         if t in R:
@@ -224,18 +227,44 @@ def main():
         macro("MusComp", str(sum(v["complements"] for v in mu.values())))
         macro("MusSubs", str(sum(v["substitutes"] for v in mu.values())))
     # ------------------------------------------------------------ Table: the shared fresh pool (one set of 1000 instances, five models, every signal)
-    L = ["\\begin{tabular}{@{}lrrrrrrr@{}}\\toprule", "Model & $x_{24}$ & \\multicolumn{4}{c}{Regret at $T$=24} & DP & C:S \\\\",
-         " & & S0 & S1 & S4 & S0+S4 & gap & \\\\ \\midrule"]
+    L = ["\\begin{tabular}{@{}lrrrrr@{}}\\toprule", "Model & $x$ & surface & hidden & conf. & surf.+conf. \\\\ \\midrule"]
     for t in FRESH5:
         if t not in R:
             continue
         cs = {(c["sig"], c["m"]): c for c in C[t]}
-        gap = max(c["dp_vs_label_free"] for c in C[t])
-        sd = R[t]["second_differences"]
-        L.append(f"{ROW[t]} & {cs[('S0', 8)]['x']:.1f} & " + " & ".join(f"{cs[(g, 8)]['best_per_step_regret']:.1f}" for g in ("S0", "S1", "S4", "S0+S4"))
-                 + f" & {gap:.1f} & {sd['complements']}:{sd['substitutes']} \\\\")
+        L.append(f"{ROW[t]} & {cs[('S0', 8)]['x']:.1f} & " + " & ".join(f"{cs[(g, 8)]['best_per_step_regret']:.1f}" for g in ("S0", "S1", "S4", "S0+S4")) + " \\\\")
     L.append("\\bottomrule\\end{tabular}")
     (out / "gen_runs.tex").write_text("\n".join(L))
+
+    # ------------------------------------------------------------ Table: both pre-committed prediction sets, held / not held with the measured value
+    if S:
+        def mark(v, val):
+            return ("yes" if v else "\\textbf{no}") + (f" ({val})" if val else "")
+
+        def two(d):
+            return f"{d:.2f}".lstrip("0")
+
+        A, B_ = S["v1_as_protocol_all_signals"], S["v1_protocol_literal"]
+        first = [("P1", "loss rises with $x$", "P1", lambda d: two(d["spearman"])),
+                 ("P2", "$x<0.3$: loss $\\le$3", "P2", lambda d: f"{d['max']:.1f}"),
+                 ("P3", "$x>1.5$: loss $\\ge$8", "P3", lambda d: f"{100 * d['fraction_ge8']:.0f}\\%"),
+                 ("P4", "closed form $r\\ge$.8", "P4", lambda d: two(d["pearson"])),
+                 ("P5", "Belief-DP gap $\\le$1--3", "P5", lambda d: f"{d['max']:.1f}"),
+                 ("P6", "pair ratio falls 2B--9B", None, None),
+                 ("P7", "gap $\\le$3, new pool", "P7", lambda d: f"{d['max']:.1f}")]
+        L = ["\\begin{tabular}{@{}llll@{}}\\toprule", "& \\emph{First set} & 5 runs & +6-step, QA \\\\ \\midrule"]
+        for pid, text, key, val in first:
+            if key is None:
+                L.append(f"{pid} & {text} & {mark(S['P6']['held'], '')} & {mark(S['P6']['held'], '')} \\\\")
+            else:
+                L.append(f"{pid} & {text} & {mark(A[key]['held'], val(A[key]))} & {mark(B_[key]['held'], val(B_[key]))} \\\\")
+        U, N = S["v2_as_written_all_unseen"], S["v2_l40s_completely_unseen"]
+        L.append("\\midrule & \\emph{Second set (signal-aware)} & 11 runs & newest 6 \\\\ \\midrule")
+        for pid, text, val in (("V1", "$r\\ge$.9", lambda d: two(d["pearson"])), ("V2", "mean error $\\le$2", lambda d: two(d["mae"])),
+                               ("V3", "beats closed form", lambda d: f"{d['mae_signal_informative']:.1f}/{d['mae_closed_informative']:.1f}"), ("V4", "$r\\ge$.85 below cap", lambda d: two(d["pearson"]))):
+            L.append(f"{pid} & {text} & {mark(U[pid]['held'], val(U[pid]))} & {mark(N[pid]['held'], val(N[pid]))} \\\\")
+        L.append("\\bottomrule\\end{tabular}")
+        (out / "gen_preds.tex").write_text("\n".join(L))
 
     # ------------------------------------------------------------ deep runs (6-step arithmetic, MuSiQue), when present
     deep = {t: json.loads((res / "scaling" / f"{t}.json").read_text()) for t in extra if t.startswith("arith6_")}
@@ -276,7 +305,7 @@ def main():
     plt.rcParams.update({"font.family": "serif", "font.serif": ["Nimbus Roman", "Times New Roman", "STIXGeneral", "DejaVu Serif"], "mathtext.fontset": "stix",
                          "font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.7,
                          "axes.edgecolor": "#6b6a66", "xtick.color": "#2f2e2b", "ytick.color": "#2f2e2b"})
-    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.3))
+    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.65))
     # (a) utility versus total price for a homogeneous chain
     ax = axs[0]
     T, p = 12, 0.9
@@ -300,14 +329,13 @@ def main():
         ax.set_ylim(-0.7, 19.5)
         ax.set_xticks([0, 5, 10, 15])
         ax.set_yticks([0, 5, 10, 15])
-        ax.set_aspect("equal", adjustable="box")
-        ax.set_xlabel("predicted regret (points)")
+        ax.set_xlabel("predicted loss (points)")
         ax.set_title(title, fontsize=9)
         for k, (t_, col) in enumerate(text):
             ax.text(0.03, 0.97 - 0.11 * k, t_, transform=ax.transAxes, color=col, fontsize=9, va="top", fontweight="bold")
-    axs[1].set_ylabel("measured regret (points)")
+    axs[1].set_ylabel("measured loss (points)")
     axs[2].legend(frameon=False, fontsize=8, loc="lower right", handletextpad=0.1, borderaxespad=0.0, markerscale=1.3)
-    fig.subplots_adjust(left=0.085, right=0.995, bottom=0.19, top=0.9, wspace=0.34)
+    fig.subplots_adjust(left=0.085, right=0.995, bottom=0.17, top=0.91, wspace=0.34)
     fig.savefig(out / "figures" / "fig1.pdf")
     fig.savefig(out / "figures" / "fig1.png", dpi=250)
     (out / "gen_macros.tex").write_text("\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in M.items()) + "\n")
