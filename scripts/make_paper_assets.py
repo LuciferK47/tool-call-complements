@@ -2,7 +2,7 @@
 """Regenerate every number, table and figure in the paper from results/ (no number is typed by hand).
 
     python scripts/make_paper_assets.py --out paper_assets
-Writes gen_macros.tex, gen_runs.tex, gen_preds.tex and figures/fig1.pdf into --out.
+Writes gen_macros.tex, gen_runs.tex, gen_preds.tex, gen_six.tex and figures/fig1.pdf into --out.
 """
 
 import argparse
@@ -59,6 +59,9 @@ def main():
     macro("NRuns", str(len(R)))
     macro("NThree", str(len([t for t in R if t in ORDER])))
     macro("NSix", str(len([t for t in R if t in SIX])))
+    full = [t for t in R if t in ORDER and "S1" in R[t]["runs"]["partition_0"]]
+    macro("NThreeAll", str(len(full)))
+    macro("NThreeSurf", str(len([t for t in R if t in ORDER]) - len(full)))
     macro("NCells", str(len(allc)))
     macro("RhoAll", f"{spearmanr(x, r)[0]:.2f}")
     macro("PearAll", f"{pearsonr(pr, r)[0]:.2f}")
@@ -201,6 +204,19 @@ def main():
             macro(f"{k}Never", f"{100 * d['never_accuracy']:.0f}")
             dpall.append(max(c["dp_vs_label_free"] for c in cs.values()))
     macro("SixDPAll", f1(max(dpall)))
+    before = sorted((res / "scaling_before_input_flag_fix").glob("arith6_*_matched.json"))        # the same runs with the colliding "missing input" flag
+    if before:
+        macro("SixBugGap", f1(max(c["dp_vs_label_free"] for f in before for c in cp.cells(json.loads(f.read_text())))))
+    if all(t in extra for t in SIXM):
+        L = ["\\begin{tabular}{@{}lrrrrr@{}}\\toprule", " & unaided & \\multicolumn{2}{c}{Loss, $T$=6} & $T$=192 & DP \\\\",
+             "Model & acc.\\ (\\%) & surf. & +conf. & surf. & gap \\\\ \\midrule"]
+        for t, nm in zip(SIXM, ("0.5B", "0.8B", "2B", "4B", "9B")):
+            d = json.loads((res / "scaling" / f"{t}.json").read_text())
+            cs = {(c["sig"], c["m"]): c for c in cp.cells(d)}
+            L.append(f"{nm} & {100 * d['never_accuracy']:.0f} & {cs[('S0', 1)]['best_per_step_regret']:.1f} & {cs[('S0+S4', 1)]['best_per_step_regret']:.1f} & "
+                     f"{cs[('S0', 32)]['best_per_step_regret']:.1f} & {max(c['dp_vs_label_free'] for c in cs.values()):.1f} \\\\")
+        L.append("\\bottomrule\\end{tabular}")
+        (out / "gen_six.tex").write_text("\n".join(L))
     macro("SixDPExB", f1(max(v for t_, v in zip(SIXM, dpall) if "0p8b" not in t_)))
     ms = res / "musique_summary.json"
     if ms.exists():
@@ -239,19 +255,17 @@ def main():
     # ------------------------------------------------------------ Table: both pre-committed prediction sets, held / not held with the measured value
     if S:
         def mark(v, val):
-            return ("yes" if v else "\\textbf{no}") + (f" ({val})" if val else "")
-
-        def two(d):
-            return f"{d:.2f}".lstrip("0")
+            return ("yes" if v else "\\textbf{no}") + (f" {val}" if val else "")
 
         A, B_ = S["v1_as_protocol_all_signals"], S["v1_protocol_literal"]
-        first = [("P1", "loss rises with $x$", "P1", lambda d: two(d["spearman"])),
-                 ("P2", "$x<0.3$: loss $\\le$3", "P2", lambda d: f"{d['max']:.1f}"),
-                 ("P3", "$x>1.5$: loss $\\ge$8", "P3", lambda d: f"{100 * d['fraction_ge8']:.0f}\\%"),
-                 ("P4", "closed form $r\\ge$.8", "P4", lambda d: two(d["pearson"])),
-                 ("P5", "Belief-DP gap $\\le$1--3", "P5", lambda d: f"{d['max']:.1f}"),
-                 ("P6", "pair ratio falls 2B--9B", None, None),
-                 ("P7", "gap $\\le$3, new pool", "P7", lambda d: f"{d['max']:.1f}")]
+        r2 = lambda k: (lambda d: f"{d[k]:.2f}")
+        first = [("P1", "loss rises with $x$: $\\rho\\ge0.7$", "P1", r2("spearman")),
+                 ("P2", "$x<0.3$: max loss $\\le3$", "P2", r2("max")),
+                 ("P3", "$x>1.5$: 90\\% lose $\\ge8$", "P3", lambda d: f"{100 * d['fraction_ge8']:.0f}\\%"),
+                 ("P4", "closed form: $r\\ge0.8$", "P4", r2("pearson")),
+                 ("P5", "gap: 90\\% $\\le1$, max $\\le3$", "P5", lambda d: f"{d['max']:.1f}"),
+                 ("P6", "pair ratio 2B$>$4B$>$9B", None, None),
+                 ("P7", "new pool: max gap $\\le3$", "P7", lambda d: f"{d['max']:.1f}")]
         L = ["\\begin{tabular}{@{}llll@{}}\\toprule", "& \\emph{First set} & 5 runs & +6-step, QA \\\\ \\midrule"]
         for pid, text, key, val in first:
             if key is None:
@@ -259,9 +273,10 @@ def main():
             else:
                 L.append(f"{pid} & {text} & {mark(A[key]['held'], val(A[key]))} & {mark(B_[key]['held'], val(B_[key]))} \\\\")
         U, N = S["v2_as_written_all_unseen"], S["v2_l40s_completely_unseen"]
-        L.append("\\midrule & \\emph{Second set (signal-aware)} & 11 runs & newest 6 \\\\ \\midrule")
-        for pid, text, val in (("V1", "$r\\ge$.9", lambda d: two(d["pearson"])), ("V2", "mean error $\\le$2", lambda d: two(d["mae"])),
-                               ("V3", "beats closed form", lambda d: f"{d['mae_signal_informative']:.1f}/{d['mae_closed_informative']:.1f}"), ("V4", "$r\\ge$.85 below cap", lambda d: two(d["pearson"]))):
+        L.append("\\midrule & \\emph{Second set} & 11 runs & newest 6 \\\\ \\midrule")
+        for pid, text, val in (("V1", "signal-aware: $r\\ge0.9$", r2("pearson")), ("V2", "mean error $\\le2$ points", r2("mae")),
+                               ("V3", "error vs.\\ closed form", lambda d: f"{d['mae_signal_informative']:.1f}/{d['mae_closed_informative']:.1f}"),
+                               ("V4", "below cap: $r\\ge0.85$", r2("pearson"))):
             L.append(f"{pid} & {text} & {mark(U[pid]['held'], val(U[pid]))} & {mark(N[pid]['held'], val(N[pid]))} \\\\")
         L.append("\\bottomrule\\end{tabular}")
         (out / "gen_preds.tex").write_text("\n".join(L))
@@ -305,7 +320,7 @@ def main():
     plt.rcParams.update({"font.family": "serif", "font.serif": ["Nimbus Roman", "Times New Roman", "STIXGeneral", "DejaVu Serif"], "mathtext.fontset": "stix",
                          "font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.7,
                          "axes.edgecolor": "#6b6a66", "xtick.color": "#2f2e2b", "ytick.color": "#2f2e2b"})
-    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.65))
+    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.3))
     # (a) utility versus total price for a homogeneous chain
     ax = axs[0]
     T, p = 12, 0.9
@@ -318,24 +333,23 @@ def main():
     ax.legend(frameon=False, fontsize=8.5, loc="upper right", handlelength=1.8, borderaxespad=0.1)
     # (b), (c) measured regret of the best per-step rule against the two predictions, split by signal type
     for ax, key, title in ((axs[1], "predicted_best_per_step", "(b) closed form"), (axs[2], "signal_aware", "(c) signal-aware")):
-        text = []
         for informative, col, mk, lab in ((False, "#2a78d6", "o", "surface"), (True, "#eb6834", "^", "informative")):
             cs = [c for c in allc if (c["sig"] != "S0") == informative]
             xv, yv = [c[key] for c in cs], [c["best_per_step_regret"] for c in cs]
-            ax.scatter(xv, yv, s=13, marker=mk, color=col, alpha=0.6, lw=0, label=lab, zorder=3 if not informative else 2)
-            text.append((f"$r$={pearsonr(xv, yv)[0]:.2f}", col))
+            ax.scatter(xv, yv, s=13, marker=mk, color=col, alpha=0.6, lw=0, label=f"{lab}: $r$ = {pearsonr(xv, yv)[0]:.2f}", zorder=3 if not informative else 2)
         ax.plot([0, 19], [0, 19], color="#1a1a19", lw=0.8, zorder=1)
         ax.set_xlim(-0.7, 19.5)
-        ax.set_ylim(-0.7, 19.5)
+        ax.set_ylim(-0.7, 25.5)                      # headroom above the data for the legend
         ax.set_xticks([0, 5, 10, 15])
         ax.set_yticks([0, 5, 10, 15])
         ax.set_xlabel("predicted loss (points)")
         ax.set_title(title, fontsize=9)
-        for k, (t_, col) in enumerate(text):
-            ax.text(0.03, 0.97 - 0.11 * k, t_, transform=ax.transAxes, color=col, fontsize=9, va="top", fontweight="bold")
+        leg = ax.legend(frameon=False, fontsize=8, loc="upper left", handletextpad=0.1, borderaxespad=0.1, labelspacing=0.8, markerscale=1.4)
+        for t_, col in zip(leg.get_texts(), ("#2a78d6", "#eb6834")):
+            t_.set_color(col)
+            t_.set_fontweight("bold")
     axs[1].set_ylabel("measured loss (points)")
-    axs[2].legend(frameon=False, fontsize=8, loc="lower right", handletextpad=0.1, borderaxespad=0.0, markerscale=1.3)
-    fig.subplots_adjust(left=0.085, right=0.995, bottom=0.17, top=0.91, wspace=0.34)
+    fig.subplots_adjust(left=0.085, right=0.995, bottom=0.19, top=0.9, wspace=0.34)
     fig.savefig(out / "figures" / "fig1.pdf")
     fig.savefig(out / "figures" / "fig1.png", dpi=250)
     (out / "gen_macros.tex").write_text("\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in M.items()) + "\n")

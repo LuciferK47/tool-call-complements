@@ -134,7 +134,9 @@ def deep_surface(env: str, K: int, arrays, side) -> np.ndarray:
         left = np.where(lvl[None, :] == 0, left, vin)
         dig = lambda x: np.floor(np.log10(np.maximum(np.abs(x), 1.0))) + 1.0
         dl, dr, mul = dig(left), dig(right), (ops == "*").astype(float)
-        cols = [ops == "+", ops == "-", ops == "*", dl, dr, dl * dr * mul, np.log10(np.maximum(np.abs(left), 1.0)) * mul, vin != -1]
+        # no "input missing" flag: -1 marks a missing input in the stored arrays but is also a real intermediate result (7 - 8), so a flag "vin != -1" fired on
+        # real inputs and the probe extrapolated to near-certainty on them (see results/scaling_before_input_flag_fix/). Same columns as horizon.surface_nobin.
+        cols = [ops == "+", ops == "-", ops == "*", dl, dr, dl * dr * mul, np.log10(np.maximum(np.abs(left), 1.0)) * mul]
     else:
         q = side["questions"]
         nw = np.array([[len(s.split()) for s in row] for row in q], float)
